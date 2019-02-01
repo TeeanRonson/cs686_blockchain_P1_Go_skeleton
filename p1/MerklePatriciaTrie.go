@@ -10,6 +10,7 @@ import (
 type Flag_value struct {
 	encoded_prefix []uint8
 	value string
+
 }
 
 type Node struct {
@@ -21,27 +22,47 @@ type Node struct {
 type MerklePatriciaTrie struct {
 	db map[string]Node
 	root string
+
 }
 
+/*
+Takes a key as the argument, traverses down the MPT to find the value
+iF the key doesnt exist, return an empty string
+ */
 func (mpt *MerklePatriciaTrie) Get(key string) string {
 	// TODO
 	return ""
 }
 
+/*
+Takes a pair of <key, value> as arguments. It will traverse down the MPT and find the right place to insert the value
+ */
 func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 	// TODO
 }
 
+/*
+Function takes a key as the argument, traverses down the MPT and finds the Key.
+If the key exists, delete the corresponding value and re-balance the Trie, if necessary.
+if the key doesn't exist, return 'path_not_found'
+ */
 func (mpt *MerklePatriciaTrie) Delete(key string) {
 	// TODO
 }
 
+/*
+Function takes an array of HEX value as the input, mark the Node type(Branch, Leaf, Extension),
+makes sure the length is even, and converts it into an array of ASCII numbers as the output.
+ */
 func compact_encode(hex_array []uint8) []uint8 {
 	// TODO
 	return []uint8{}
 }
 
 // If Leaf, ignore 16 at the end
+/*
+Reverse the compact_encode function
+ */
 func compact_decode(encoded_arr []uint8) []uint8 {
 	// TODO
 	return []uint8{}
@@ -54,6 +75,10 @@ func test_compact_encode() {
 	fmt.Println(reflect.DeepEqual(compact_decode(compact_encode([]uint8{15, 1, 12, 11, 8, 16})), []uint8{15, 1, 12, 11, 8}))
 }
 
+/*
+
+
+ */
 func (node *Node) hash_node() string {
 	var str string
 	switch node.node_type {
