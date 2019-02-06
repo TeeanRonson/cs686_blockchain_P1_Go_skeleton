@@ -7,60 +7,46 @@ import (
 
 func main() {
 
-	fmt.Println("Testing the Get method")
-	//prefix := make([]uint8, 0)
-	//flagValue := p1.Flag_value{prefix, "Hello"}
-	//arr := make([]string, 0)
-	//nod := p1.Node{0, arr, flagValue}
-
-	//db := make(map[string]p1.Node)
-	//mpt := p1.MerklePatriciaTrie{db, "rootHash"}
-	//mpt.Get("dog")
-
-	//var hex_array = []uint8(value)
-
-	//fmt.Println("\nRun Compact Encode")
-	//fmt.Println("Result:", p1.Compact_encode(toInsert))
-
-	//-------------------//-------------------//-------------------//-------------------//-------------------
-
-	fmt.Println("Testing some values")
-	do := p1.EncodeToHex("do")
-	fmt.Println("Outside:", do);
+	//fmt.Println("Testing the Get method")
+	mpt := p1.GetMPTrie()
+	do := "do"
+	result, err := mpt.Get(do)
+	fmt.Println(result, err)
 
 
-	//fmt.Println("-------------------")
-	//dog := p1.EncodeToHex("dog")
-	//puppy := p1.EncodeToHex("puppy")
-	//horse := p1.EncodeToHex("horse")
-	//fmt.Printf("dog: %s\n", dog)
+
+
+
+
+	//-------------------//-------------------//------------------//-------------------//-------------------
+
+	//fmt.Println("Testing some values")
+	//do := p1.EncodeToHex("do")
+	//fmt.Println("do:", do);
 	//
-	//fmt.Println()
-	//fmt.Println("\nCompact Encode Values")
-	//fmt.Println(p1.Compact_encode(dog))
+	//dog := p1.EncodeToHex("dog")
+	//fmt.Println("dog:", dog)
+	//
+	//doge := p1.EncodeToHex("doge")
+	//fmt.Println("doge:", doge)
+	//
+	//horse := p1.EncodeToHex("horse")
+	//fmt.Println("horse:", horse)
+	//
+	//fmt.Println(p1.Compact_encode([]uint8{6, 1, 5, 7, 2, 7, 3, 6, 5}))
 
-	//fmt.Println(p1.Compact_encode([]uint8 {6, 1}))
-	//fmt.Println(p1.Compact_encode([]uint8 {6, 4, 6, 15, 6, 7}))
-	//fmt.Println(p1.Compact_encode(puppy))
-	//fmt.Println(p1.Compact_encode(horse))
+	//fmt.Println("\nCompact Encode Values")
+	//fmt.Println("Final-----------:", p1.Compact_encode(do))
+	//fmt.Println("Final-----------:",p1.Compact_encode(dog))
+	//fmt.Println("Final-----------:",p1.Compact_encode(doge))
+	//fmt.Println("Final-----------:",p1.Compact_encode(horse))
+
+	//fmt.Println("Test Encode:", p1.Compact_encode([]uint8 {1, 6, 1}))
+	//fmt.Println("Test Decode:", p1.CompactToHex([]uint8 {17, 97}))
+	//fmt.Println("Test Decode:", p1.CompactToHex([]uint8 {15, 1, 12, 11, 8, 16}))
+
 
 	//fmt.Println("\nTest Cases")
-	//a := p1.EncodeToHex("do")
-	//fmt.Printf("a: %x\n", a)
-	//
-	//fmt.Println("Output:", p1.Compact_encode(a))
-
 	//p1.Test_compact_encode()
-
-
-
-
-
-
-
-
-
-
-
 
 }

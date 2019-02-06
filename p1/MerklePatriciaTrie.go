@@ -3,6 +3,7 @@ package p1
 import (
 	"encoding/hex"
 	"fmt"
+	"github.com/pkg/errors"
 	"golang.org/x/crypto/sha3"
 	"reflect"
 )
@@ -13,6 +14,11 @@ type Flag_value struct {
 
 }
 
+/**
+The variable "branch_value" is used only when it's a Branch Node
+Variable "flag_value" is used only when it's an Ext or Leaf Node.
+You don't have to use "branch_value" if it's an Ext or Leaf Node
+ */
 type Node struct {
 	node_type int // 0: Null, 1: Branch, 2: Ext or Leaf
 	branch_value [17]string
@@ -25,31 +31,71 @@ type MerklePatriciaTrie struct {
 }
 
 /**
+Retrieves a new MPT
+ */
+func GetMPTrie() *MerklePatriciaTrie {
+
+	db := new (map[string]Node)
+	root := "root"
+	return &MerklePatriciaTrie{*db, root}
+}
+
+func (mpt *MerklePatriciaTrie) GetHelper2(root string, path []uint8, position int) (value string, newRoot string, err error) {
+
+	//Do some hashing, find the path all the way down and return the value
+	currNode := mpt.db[root]
+	nodeType := currNode.node_type
+	//Use switch statement to determine the type of node
+	switch nodeType {
+	case 0:
+		return "", "", err
+	case 1:
+		//Branch Node
+		//Remove the first item in the path = item
+		//find the next node in the DB using the string in branch_value[item}
+		//Recurse into the function
+		
+	case 2:
+		//Extension/leaf node
+		//Case 1 - Extension Node
+		//decode encoded_prefix at Node
+		//find substring of nibblesAtNode with path
+		//if exactly the same
+		//return value,
+	}
+
+	return "", "", err
+}
+/**
 Traverses the MPT to find the value associated with the key
  */
-func getHelper(key string, mpt *MerklePatriciaTrie) string {
+func (mpt *MerklePatriciaTrie) GetHelper1(path []uint8) (string, error) {
 
-	return ""
+	if path == nil || mpt.root == ""{
+		return "", errors.New("Path is Nil - Get")
+	}
+
+	value, newRoot, err := mpt.GetHelper2(mpt.root, path, 0)
+	if err == nil {
+		mpt.root = newRoot
+	}
+	//Find the Hash Value of the Node
+	return value, errors.New("Path Not Found - Get")
+
 }
 
 /*
 Takes a key as the argument, traverses down the MPT to find the value
-iF the key doesnt exist, return an empty string
+if the key doesnt exist, return an empty string
  */
-func (mpt *MerklePatriciaTrie) Get(key string) string {
-
+func (mpt *MerklePatriciaTrie) Get(key string) (string, error) {
 	//Create a path array
-	//Convert the key string into Hexcode to finds its path through the MPT
+	//Convert the key string into Hexcode
 	//Add each item of the Hexcode into the Path array
 	//pass MPT Tree and Key into the Helper method
-	path := make([]uint8, 0)
-	keyPath := EncodeToHex(key)
-	fmt.Println(keyPath)
-	for _, value := range keyPath {
-		path = append(path, value)
-	}
-	fmt.Println("path:", path)
-	return ""
+	path := EncodeToHex(key)
+	fmt.Println("Path:", path)
+	return mpt.GetHelper1(path)
 }
 
 /*
@@ -72,70 +118,8 @@ Function takes a key as the argument, traverses down the MPT and finds the Key.
 If the key exists, delete the corresponding value and re-balance the Trie, if necessary.
 if the key doesn't exist, return 'path_not_found'
  */
-func (mpt *MerklePatriciaTrie) Delete(key string) {
-	// TODO
-}
-
-
-/**
-Encodes the incoming Key(string) into Hex values
-
-Example: do --> 646f in String form
-			--> [54 52 54 102] in ASCII form
-			--> for each value returned in the string we want to convert
-				that into values from 1-16: where f = 16
-			--> Algo:
-				for each value in 6 4 6 f
-					if value == number
-						add to list
-					else
-						convert letter to value
- */
-func EncodeToHex(key string) []uint8 {
-
-	//for each item in the key
-		//find its ASCII value
-		//Find the hex values associated with that ASCII
-		//Add it into the []uint8
-	result := make([]uint8, 0)
-	ascii := []byte(key)
-	fmt.Println(ascii)
-	for _, value := range ascii {
-		result = append(result, value/16)
-		result = append(result, value % 16)
-	}
-
-
-
-	//src := []uint8(key)
-	//dst := make([]uint8, hex.EncodedLen(len(src)))
-	//hex.Encode(dst, src)
-	//fmt.Printf("Hex value: %s\n", dst)
-	return result
-}
-
-func convertToChar1(letter string) int8 {
-
-	switch letter {
-	case "a":
-		return 10 //index
-	case "b":
-		return 11
-	case "c":
-		return 12
-	case "d":
-		return 13
-	case "e":
-		return 14
-	case "f":
-		return 15
-	}
-	return -1
-}
-
-func convertToChar2(letter string) int8 {
-
-	return -1
+func (mpt *MerklePatriciaTrie) Delete(key string) error {
+	return errors.New("Path Not Found - Delete")
 }
 /*
 Function takes an array of HEX value as the input, mark the Node type(Branch, Leaf, Extension),
@@ -163,7 +147,7 @@ func Compact_encode(hex_array []uint8) []uint8 {
 	if oddlen == 1 {
 		hex_array = append(flags, hex_array...)
 	} else {
-		flags = append(append(flags, 0))
+		flags = append(flags, 0)
 		hex_array = append(flags, hex_array...)
 	}
 	fmt.Println("Hex Array with Odd check", hex_array)
@@ -172,23 +156,36 @@ func Compact_encode(hex_array []uint8) []uint8 {
 	for i:= 0; i < len(hex_array); i += 2 {
 		result = append(result, 16*hex_array[i]+hex_array[i+1])
 	}
-	fmt.Println(result)
+	fmt.Println("Result Encode:", result)
 	return result
 }
+
 
 // If Leaf, ignore 16 at the end
 /*
 Reverse the compact_encode function
  */
-func compact_decode(encoded_arr []uint8) []uint8 {
-	return []uint8{}
+func Compact_decode(encoded_arr []uint8) []uint8 {
+
+	unpack := ConvertToHex(encoded_arr)
+	if unpack[0] < 2 { //Extension node, remove 16
+		unpack = unpack[:len(unpack)-1]
+	}
+	fmt.Println("First Unpack: ", unpack)
+	checkPrefix := 2 - unpack[0]&1
+	fmt.Println(unpack[checkPrefix:])
+
+	if unpack[len(unpack)-1] == 16 {
+		return unpack[checkPrefix:len(unpack)-1]
+	}
+	return unpack[checkPrefix:]
 }
 
 func Test_compact_encode() {
-	fmt.Println(reflect.DeepEqual(compact_decode(Compact_encode([]uint8{1, 2, 3, 4, 5})), []uint8{1, 2, 3, 4, 5}))
-	//fmt.Println(reflect.DeepEqual(compact_decode(Compact_encode([]uint8{0, 1, 2, 3, 4, 5})), []uint8{0, 1, 2, 3, 4, 5}))
-	//fmt.Println(reflect.DeepEqual(compact_decode(Compact_encode([]uint8{0, 15, 1, 12, 11, 8, 16})), []uint8{0, 15, 1, 12, 11, 8}))
-	//fmt.Println(reflect.DeepEqual(compact_decode(Compact_encode([]uint8{15, 1, 12, 11, 8, 16})), []uint8{15, 1, 12, 11, 8}))
+	fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{1, 2, 3, 4, 5})), []uint8{1, 2, 3, 4, 5}))
+	fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{0, 1, 2, 3, 4, 5})), []uint8{0, 1, 2, 3, 4, 5}))
+	fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{0, 15, 1, 12, 11, 8, 16})), []uint8{0, 15, 1, 12, 11, 8}))
+	fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{15, 1, 12, 11, 8, 16})), []uint8{15, 1, 12, 11, 8}))
 }
 
 /*
