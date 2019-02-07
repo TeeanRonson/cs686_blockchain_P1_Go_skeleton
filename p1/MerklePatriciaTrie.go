@@ -40,10 +40,10 @@ func GetMPTrie() *MerklePatriciaTrie {
 	return &MerklePatriciaTrie{*db, root}
 }
 
-func (mpt *MerklePatriciaTrie) GetHelper2(root string, path []uint8, position int) (value string, newRoot string, err error) {
+func (mpt *MerklePatriciaTrie) GetHelper2(node string, path []uint8, position int) (value string, newRoot string, err error) {
 
 	//Do some hashing, find the path all the way down and return the value
-	currNode := mpt.db[root]
+	currNode := mpt.db[node]
 	nodeType := currNode.node_type
 	//Use switch statement to determine the type of node
 	switch nodeType {
@@ -54,24 +54,49 @@ func (mpt *MerklePatriciaTrie) GetHelper2(root string, path []uint8, position in
 		//Remove the first item in the path = item
 		//find the next node in the DB using the string in branch_value[item}
 		//Recurse into the function
-		
+		if len(path) == 0 {
+			return currNode.branch_value[16], "", err
+		}
+		nextHash := currNode.branch_value[path[0]]
+		return mpt.GetHelper2(nextHash, path[1:], 0)
 	case 2:
-		//Extension/leaf node
-		//Case 1 - Extension Node
-		//decode encoded_prefix at Node
+		//Extension/Leaf node
+		//nibbles = Decode encoded_prefix at Node
 		//find substring of nibblesAtNode with path
-		//if exactly the same
-		//return value,
-	}
+		//if nibblesAtNode == path
+		//Node is a leaf node
+		//return value at leaf node
+		//Check for similar prefix
+		//if nibblesAtNode matches path up to[len(nibblesAtNode)]
+		//Node is an extension node
+		//recurse down with the rest of the path
+		isLeaf := false
+		if ConvertToHex(currNode.flag_value.encoded_prefix)[0] < 2 {
+			isLeaf = false
+		} else {
+			isLeaf = true
+		}
+		nibbles := Compact_decode(currNode.flag_value.encoded_prefix)
 
+		if reflect.DeepEqual(nibbles, path) && isLeaf {
+			return currNode.flag_value.value, "", err
+		} else if !reflect.DeepEqual(nibbles, path) && isLeaf {
+			return "", "", err
+		} else {
+			length := len(nibbles)
+			nextHash := currNode.flag_value.value
+			return mpt.GetHelper2(nextHash, path[length:], 0)
+		}
+	}
 	return "", "", err
 }
+
 /**
 Traverses the MPT to find the value associated with the key
  */
 func (mpt *MerklePatriciaTrie) GetHelper1(path []uint8) (string, error) {
 
-	if path == nil || mpt.root == ""{
+	if path == nil || mpt.root == "" {
 		return "", errors.New("Path is Nil - Get")
 	}
 
@@ -102,7 +127,6 @@ func (mpt *MerklePatriciaTrie) Get(key string) (string, error) {
 Takes a pair of <key, value> as arguments. It will traverse down the MPT and find the right place to insert the value
  */
 func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
-
 	//flag := Flag_value{EncodeToHex(key), new_value}
 	//node := Node{2, nil, flag}
 }
@@ -182,10 +206,10 @@ func Compact_decode(encoded_arr []uint8) []uint8 {
 }
 
 func Test_compact_encode() {
-	fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{1, 2, 3, 4, 5})), []uint8{1, 2, 3, 4, 5}))
-	fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{0, 1, 2, 3, 4, 5})), []uint8{0, 1, 2, 3, 4, 5}))
+	//fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{1, 2, 3, 4, 5})), []uint8{1, 2, 3, 4, 5}))
+	//fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{0, 1, 2, 3, 4, 5})), []uint8{0, 1, 2, 3, 4, 5}))
 	fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{0, 15, 1, 12, 11, 8, 16})), []uint8{0, 15, 1, 12, 11, 8}))
-	fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{15, 1, 12, 11, 8, 16})), []uint8{15, 1, 12, 11, 8}))
+	//fmt.Println(reflect.DeepEqual(Compact_decode(Compact_encode([]uint8{15, 1, 12, 11, 8, 16})), []uint8{15, 1, 12, 11, 8}))
 }
 
 /*
