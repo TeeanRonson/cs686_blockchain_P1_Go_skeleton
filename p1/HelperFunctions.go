@@ -1,6 +1,18 @@
 package p1
 
 /**
+Retrieves a new MPT
+ */
+func GetMPTrie() MerklePatriciaTrie {
+
+    db := make(map[string]Node)
+    root := "root"
+
+    mpt := MerklePatriciaTrie{db, root}
+    return mpt
+}
+
+/**
 Converts the input key string into Hex format
  */
 func EncodeToHex(key string) []uint8 {
@@ -29,6 +41,26 @@ func ConvertToHex(encoded_arr []uint8) []uint8 {
 
     hex_values[len(hex_values)-1] = 16
     return hex_values
+}
+
+/**
+Creates a new Node
+ */
+func createNode(nodeType int, branchValue [17]string, encodedKey []uint8, newValue string) Node {
+
+    flag := Flag_value{Compact_encode(encodedKey), newValue}
+    newNode := Node{nodeType, branchValue, flag}
+    return newNode
+}
+
+/**
+Checks if the node is a leaf or extension node
+ */
+func isLeaf(currNode Node) bool {
+    if ConvertToHex(currNode.flag_value.encoded_prefix)[0] < 2 {
+        return false
+    }
+    return  true
 }
 
 

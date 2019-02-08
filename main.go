@@ -7,11 +7,12 @@ import (
 
 func main() {
 
-	//fmt.Println("Testing the Get method")
-	//mpt := p1.GetMPTrie()
-	//do := "do"
-	//result, err := mpt.Get(do)
-	//fmt.Println(result, err)
+	fmt.Println("Testing the Get method")
+	//mpt := p1.MerklePatriciaTrie{}
+	mpt := p1.GetMPTrie()
+	//fmt.Println(p1.Compact_encode(p1.EncodeToHex("p")))
+	mpt.Insert("p", "apple")
+	mpt.Insert("aaaaa", "banana")
 
 
 
@@ -54,7 +55,7 @@ func main() {
 	//fmt.Println("Test Decode:", p1.CompactToHex([]uint8 {15, 1, 12, 11, 8, 16}))
 
 
-	fmt.Println("\nTest Cases")
-	p1.Test_compact_encode()
+	//fmt.Println("\nTest Cases")
+	//p1.Test_compact_encode()
 
 }
