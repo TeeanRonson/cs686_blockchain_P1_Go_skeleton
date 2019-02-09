@@ -124,107 +124,130 @@ func (mpt *MerklePatriciaTrie) Get(key string) (string, error) {
 	return mpt.GetHelper1(path)
 }
 
-func (mpt *MerklePatriciaTrie) InsertHelp(parent string, curr string, encodedKey []uint8, newValue string) (newHash string){
+func (mpt *MerklePatriciaTrie) InsertHelp(parent string, currHash string, encodedKey []uint8, newValue string) (newHash string){
 
-	currNode := mpt.db[curr]
+	currNode := mpt.db[currHash]
 	nodeType := currNode.node_type
 	switch nodeType {
 	case 0:
 		leaf := createNode(2, [17]string{}, encodedKey, newValue)
-		hash := leaf.hash_node()
-		mpt.db[hash] = leaf
-		return hash
-	//case1 - nodeType is branch node
-		//if no more items inside encoded_key
-		// - place item at branch[16]
-		//Hash the branch node
-		//Store the hash value in the DB[hash][newBranch node]
-		//continue to hash nodes up to the root node***
+		mpt.db[leaf.hash_node()] = leaf
+		fmt.Println("Creating a new leaf")
+		fmt.Println(mpt.db)
 
-	//there are still items inside encoded_key
-		//check if branch[encoded_key[0]] == null
-			//if null
-			//create a new leaf node and add encoded_key[1:] as the nibble
-			//add the value into the leaf node
-			//hash the leaf node
-			//store the hashed string at branch[encoded_key[0]]
-			//store the hash value and the leaf node in the DB
-			//continue to hash nodes up to the root node***
-
-			//if not null
-			//traverse down to next level
-			//send in: string value at branch_node[x], encoded_key[1:], value
+		return leaf.hash_node()
 	case 1:
 		if len(encodedKey) == 0 {
 			currNode.branch_value[16] = newValue
 			mpt.db[currNode.hash_node()] = currNode
+			return currNode.hash_node()
 		}
 
 		if currNode.branch_value[encodedKey[0]] == "" {
 			position := encodedKey[0]
-			leaf := createNode(2, [17]string{}, encodedKey[1:], newValue)
-			hash := leaf.hash_node()
-			currNode.branch_value[position] = hash
-			mpt.db[hash] = leaf
+			newHash := mpt.InsertHelp(currHash, "", encodedKey[1:], newValue)
+			currNode.branch_value[position] = newHash
+			if newHash != "" {
+				delete(mpt.db, currHash)
+				mpt.db[currNode.hash_node()] = currNode
+				return currNode.hash_node()
+			}
+			return currHash
 		} else {
-			position := encodedKey[0]
-			nextNode := currNode.branch_value[position]
-			mpt.InsertHelp(curr, nextNode, encodedKey[1:], newValue)
+			//if my child's hash changes
+			//delete myself from the db
+			//rehash myself and add myself to the db
+			//return the hash of myself
+			nextHash := currNode.branch_value[encodedKey[0]]
+			newHash := mpt.InsertHelp(currHash, nextHash, encodedKey[1:], newValue)
+			if newHash != nextHash {
+				delete(mpt.db, currHash)
+				mpt.db[currNode.hash_node()] = currNode
+				return currNode.hash_node()
+			}
+			return currHash
 		}
 	case 2:
-		//if there is nothing left in encodedKey, then we should have a repeat key
-		//replace the value of the key
-		//would we still have values in the leaf?
-		if encodedKey == nil && isLeaf(currNode) {
-			currNode.flag_value.value = newValue
-			return
-		}
-
+		nibbles := Compact_decode(currNode.flag_value.encoded_prefix)
+		fmt.Println(isLeaf(currNode))
 		if isLeaf(currNode) {
-			nibbles := Compact_decode(currNode.flag_value.encoded_prefix)
-			match := 0
-			for encodedKey[match] == nibbles[match] {
-				match++
-			}
-			if match == 0 {
-				branch := createNode(1, [17]string{}, []uint8{}, "")
-				oldLeaf := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
-				newLeaf := createNode(2, [17]string{}, encodedKey[1:], newValue)
-				branch.branch_value[nibbles[0]] = oldLeaf.hash_node()
-				branch.branch_value[encodedKey[0]] = newLeaf.hash_node()
-				mpt.db[oldLeaf.hash_node()] = oldLeaf
-				mpt.db[newLeaf.hash_node()] = newLeaf
-			} else {
+			fmt.Println("Entering leaf node")
+			if !reflect.DeepEqual(encodedKey, nibbles) { //no match, should we just check first value?
+				newBranch := createNode(1, [17]string{}, []uint8{}, "")
+				delete(mpt.db, currHash)
+				mpt.InsertHelp(newBranch.hash_node(), newBranch.branch_value[nibbles[0]], nibbles[1:], currNode.flag_value.value)
+				mpt.InsertHelp(newBranch.hash_node(), newBranch.branch_value[encodedKey[0]], encodedKey[1:], newValue)
+				mpt.db[newBranch.hash_node()] = newBranch
+				return newBranch.hash_node()
 
+			} else if reflect.DeepEqual(encodedKey, nibbles) { //full match, replace value
+				delete(mpt.db, currHash)
+				currNode.flag_value.value = newValue
+				mpt.db[currNode.hash_node()] = currNode
+				return currNode.hash_node()
+			} else { //partial matches
+				match := findMatch(0, nibbles, encodedKey)
+				if len(encodedKey[match:]) != 0 && len(nibbles[match:]) != 0 { //excess path and excess nibbles
+					newBranch := createNode(1, [17]string{}, []uint8{}, "") //create a branch node
+					extension := createNode(2, [17]string{}, nibbles[0:match], newBranch.hash_node()) //change myself to an extension node
+					delete(mpt.db, currHash) //delete my old self from the db
+					mpt.db[extension.hash_node()] = extension //add my new self into the db
+					mpt.InsertHelp(parent, extension.hash_node(), nibbles, currNode.flag_value.value)
+					mpt.InsertHelp(parent, extension.hash_node(), encodedKey, newValue)
+					return extension.hash_node()
+				} else if len(encodedKey[match:]) != 0 && len(nibbles[match:]) == 0 { //partial match with excess path only
+					//create a branch node
+					//change myself to an extension node with the matched nibbles, add the branch node as my next node
+					//delete my old self from the db
+					//add my new self into the db
+					//recurse down with just
+					//mpt.InsertHelp(parent, extension.hash_node(), encodedKey, newValue)
+				} else if len(encodedKey[match:]) == 0 && len(nibbles[match:]) != 0 { //partial match with excess nibbles
+					//mpt.InsertHelp(parent, extension.hash_node(), nibbles, currNode.flag_value.value)
+				}
+			}
+		} else { //is extension
+			length := len(nibbles)
+			if !reflect.DeepEqual(encodedKey, nibbles) { //no match, should we just check first value?
+				newBranch := createNode(1, [17]string{}, []uint8{}, "")
+				delete(mpt.db, currHash)
+				mpt.InsertHelp(newBranch.hash_node(), newBranch.branch_value[nibbles[0]], nibbles[1:], currNode.flag_value.value)
+				mpt.InsertHelp(newBranch.hash_node(), newBranch.branch_value[encodedKey[0]], encodedKey[1:], newValue)
+				mpt.db[newBranch.hash_node()] = newBranch
+				return newBranch.hash_node()
+			} else if reflect.DeepEqual(nibbles, encodedKey) { //exact match
+				mpt.InsertHelp(currHash, currNode.flag_value.value, encodedKey[length:], newValue)
+				delete(mpt.db, currHash)
+				mpt.db[currNode.hash_node()] = currNode
+				return currNode.hash_node()
+			}
+
+			//if we have partial matches
+				//excess path and excess nibbles
+					//create a branch node
+					//recurse down with the excess path
+					//recurse down with the excess nibbles
+				//excess nibbles only
+					//recurse down the nibbles
+				//excess path only
+					//recurse down with the paths
+			if reflect.DeepEqual(encodedKey[:length], nibbles) {  //excess path
+				newHash := mpt.InsertHelp(currHash, currNode.flag_value.value, encodedKey[length:], newValue) //recurse down further
+				if newHash != currNode.flag_value.value {
+					delete(mpt.db, currNode.flag_value.value)
+					mpt.db[currNode.hash_node()] = currNode
+					return currNode.hash_node()
+				}
+				return currNode.hash_node()
 			}
 		}
 	}
-
-	//All of the nibbles match, but some extra path at the end
-	//All of path matches, but with some extra nibbles
-
-
 	//case2 - nodeType is an extension/leaf node
 		//decode nibbles to check if node is extension or leaf
 		//if leaf
-			//1. find matching pattern between encoded_key and leaf nibbles
-			//if no matching patterns
-				//create a branch node
-				//create a new leaf node for the incoming encoded_key
-				//position the new and old leaf node into the branch node
-				//hash the leaf nodes, store them into the DB
-				//continue to hash nodes up to root node
-			//if there are matching patterns
-				//create an extension node and add matching patterns as the nibble except the last value
-				//create a branch node that extends from the extension node
-				//create a new leaf node for the incoming encoded_key
-				//position the new and old leaf node into the branch node
-				//hash the leaf nodes, store them into the DB
-				//continue to hash nodes up to root node
 		//if extension
 			//2. find matching pattern between encoded_key and extension nibbles
 			//if no matching patterns
-				//
 
 			//if there are matching patterns
 				//change nibbles in extension node up to the matched portion
@@ -232,8 +255,7 @@ func (mpt *MerklePatriciaTrie) InsertHelp(parent string, curr string, encodedKey
 				//create a new branch node
 				//hash the branch node and add it to the DB
 				//return the 'hash string', remainder of the encoded key, value
-
-
+	return currHash
 }
 
 /*
@@ -248,6 +270,8 @@ func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 	newHash := mpt.InsertHelp("", mpt.root, encodedKey, new_value)
 	if newHash != mpt.root {
 		delete(mpt.db, mpt.root)
+		mpt.root = newHash
+		fmt.Println("Newhash:", newHash)
 	}
 
 }
@@ -266,6 +290,7 @@ makes sure the length is even, and converts it into an array of ASCII numbers as
 //If the last value is 16, it is a leaf node
  */
 func Compact_encode(hex_array []uint8) []uint8 {
+	fmt.Println(hex_array)
 	term := 0
 	if hex_array[len(hex_array)-1] == 16 {
 		term = 1
@@ -282,10 +307,12 @@ func Compact_encode(hex_array []uint8) []uint8 {
 		flags = append(flags, 0)
 		hex_array = append(flags, hex_array...)
 	}
+	fmt.Println("hex:", hex_array)
 	result := make([]uint8, 0)
 	for i:= 0; i < len(hex_array); i += 2 {
 		result = append(result, 16*hex_array[i]+hex_array[i+1])
 	}
+	fmt.Println("res:", result)
 	return result
 }
 
@@ -301,11 +328,11 @@ func Compact_decode(encoded_arr []uint8) []uint8 {
 		unpack = unpack[:len(unpack)-1]
 	}
 	checkPrefix := 2 - unpack[0]&1
-	fmt.Println(unpack[checkPrefix:])
+	//fmt.Println(unpack[checkPrefix:])
 
-	if unpack[len(unpack)-1] == 16 {
-		return unpack[checkPrefix:len(unpack)-1]
-	}
+	//if unpack[len(unpack)-1] == 16 {
+	//	return unpack[checkPrefix:len(unpack)-1]
+	//}
 	return unpack[checkPrefix:]
 }
 

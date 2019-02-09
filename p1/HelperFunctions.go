@@ -1,5 +1,7 @@
 package p1
 
+import "fmt"
+
 /**
 Retrieves a new MPT
  */
@@ -57,10 +59,23 @@ func createNode(nodeType int, branchValue [17]string, encodedKey []uint8, newVal
 Checks if the node is a leaf or extension node
  */
 func isLeaf(currNode Node) bool {
+    fmt.Println(ConvertToHex(currNode.flag_value.encoded_prefix))
     if ConvertToHex(currNode.flag_value.encoded_prefix)[0] < 2 {
         return false
     }
     return  true
 }
+
+/**
+find the matched portion of nibbles & encodedKey
+ */
+
+ func findMatch(match int, nibbles []uint8, encodedKey []uint8) int {
+
+     for match < len(encodedKey) && match < len(nibbles) && encodedKey[match] == nibbles[match] {
+         match++
+     }
+     return match
+ }
 
 

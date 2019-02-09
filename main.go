@@ -7,35 +7,37 @@ import (
 
 func main() {
 
-	fmt.Println("Testing the Get method")
-	//mpt := p1.MerklePatriciaTrie{}
-	mpt := p1.GetMPTrie()
+	//fmt.Println("Testing the Insert method")
+	//mpt := p1.GetMPTrie()
+	////fmt.Println(p1.Compact_encode(p1.EncodeToHex("p")))
+	//mpt.Insert("p", "apple")
+	//mpt.Insert("aaaaa", "banana")
+
+	//fmt.Println(p1.EncodeToHex("p"))
 	//fmt.Println(p1.Compact_encode(p1.EncodeToHex("p")))
-	mpt.Insert("p", "apple")
-	mpt.Insert("aaaaa", "banana")
-
-
-
-
-
-
+	//fmt.Println(p1.Compact_decode(p1.Compact_encode(p1.EncodeToHex("p"))))
 
 	//-------------------//-------------------//------------------//-------------------//-------------------
 
 	fmt.Println("Testing some values")
-
-	//do := p1.EncodeToHex("do")
-	//fmt.Println("do:", do);
-	//do2 := do[:4]
-	//fmt.Println("do:", do);
-	//fmt.Println("do2:", do2)
+	//encodedKey := []uint8{1, 6, 1, 6, 1, 6, 1}
+	//nibbles := []uint8{1, 6, 1, 6, 1, 6, 1, 6, 1}
 	//
-	//fmt.Println(reflect.DeepEqual(do2, do[:4]))
+	//match := 0
+	//for match < len(encodedKey) && encodedKey[match] == nibbles[match] {
+	//	match++
+	//}
+	//fmt.Println(encodedKey[0:match])
+	//fmt.Println(nibbles[0:match])
+	//
+	//fmt.Println(encodedKey[match:])
+	//fmt.Println(nibbles[match:])
 
 
 	//dog := p1.EncodeToHex("dog")
 	//fmt.Println("dog:", dog)
 	//
+	//fmt.Println(p1.Compact_encode([]uint8{1,6,1}))
 	//doge := p1.EncodeToHex("doge")
 	//fmt.Println("doge:", doge)
 	//
@@ -55,7 +57,7 @@ func main() {
 	//fmt.Println("Test Decode:", p1.CompactToHex([]uint8 {15, 1, 12, 11, 8, 16}))
 
 
-	//fmt.Println("\nTest Cases")
-	//p1.Test_compact_encode()
+	fmt.Println("\nTest Cases")
+	p1.Test_compact_encode()
 
 }
