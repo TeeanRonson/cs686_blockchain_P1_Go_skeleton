@@ -1,7 +1,5 @@
 package p1
 
-import "fmt"
-
 /**
 Retrieves a new MPT
  */
@@ -21,7 +19,7 @@ func EncodeToHex(key string) []uint8 {
 
     result := make([]uint8, 0)
     ascii := []byte(key)
-    //fmt.Println("ascii: ", ascii)
+    //fmt.Println("ascii:", ascii)
     for _, value := range ascii {
         result = append(result, value/16)
         result = append(result, value%16)
@@ -50,7 +48,11 @@ Creates a new Node
  */
 func createNode(nodeType int, branchValue [17]string, encodedKey []uint8, newValue string) Node {
 
-    flag := Flag_value{Compact_encode(encodedKey), newValue}
+    encode := make([]uint8, 0)
+    if len(encodedKey) != 0 {
+        encode = Compact_encode(encodedKey)
+    }
+    flag := Flag_value{encode, newValue}
     newNode := Node{nodeType, branchValue, flag}
     return newNode
 }
@@ -59,11 +61,10 @@ func createNode(nodeType int, branchValue [17]string, encodedKey []uint8, newVal
 Checks if the node is a leaf or extension node
  */
 func isLeaf(currNode Node) bool {
-    fmt.Println(ConvertToHex(currNode.flag_value.encoded_prefix))
     if ConvertToHex(currNode.flag_value.encoded_prefix)[0] < 2 {
         return false
     }
-    return  true
+    return true
 }
 
 /**

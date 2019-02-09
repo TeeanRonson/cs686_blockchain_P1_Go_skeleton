@@ -7,11 +7,14 @@ import (
 
 func main() {
 
-	//fmt.Println("Testing the Insert method")
-	//mpt := p1.GetMPTrie()
-	////fmt.Println(p1.Compact_encode(p1.EncodeToHex("p")))
-	//mpt.Insert("p", "apple")
-	//mpt.Insert("aaaaa", "banana")
+	fmt.Println("Testing the Insert method")
+	mpt := p1.GetMPTrie()
+	mpt.Insert("p", "apple")
+	mpt.Insert("aaaaa", "banana")
+
+
+	//fmt.Println(p1.Compact_encode([]uint8{7, 0}))
+	//fmt.Println(p1.Compact_encode([]uint8{7, 0, 16}))
 
 	//fmt.Println(p1.EncodeToHex("p"))
 	//fmt.Println(p1.Compact_encode(p1.EncodeToHex("p")))
@@ -19,7 +22,7 @@ func main() {
 
 	//-------------------//-------------------//------------------//-------------------//-------------------
 
-	fmt.Println("Testing some values")
+	//fmt.Println("Testing some values")
 	//encodedKey := []uint8{1, 6, 1, 6, 1, 6, 1}
 	//nibbles := []uint8{1, 6, 1, 6, 1, 6, 1, 6, 1}
 	//
@@ -57,7 +60,7 @@ func main() {
 	//fmt.Println("Test Decode:", p1.CompactToHex([]uint8 {15, 1, 12, 11, 8, 16}))
 
 
-	fmt.Println("\nTest Cases")
-	p1.Test_compact_encode()
+	//fmt.Println("\nTest Cases")
+	//p1.Test_compact_encode()
 
 }
