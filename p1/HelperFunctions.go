@@ -82,15 +82,32 @@ find the matched portion of nibbles & encodedKey
      delete(mpt.db, currNode.hash_node())
      newBranch := createNode(1, [17]string{}, []uint8{}, "")
      encodedKey = append(encodedKey, 16)
-     newLeaf1 := createNode(2, [17]string{}, Compact_encode(encodedKey[1:]), newValue) //should we append 16
-     newLeaf2 := createNode(2, [17]string{}, Compact_encode(nibbles[1:]), currNode.flag_value.value)
+     newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue) //should we append 16
+     newLeaf2 := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
      newBranch.branch_value[encodedKey[0]] = newLeaf1.hash_node()
      newBranch.branch_value[nibbles[0]] = newLeaf2.hash_node()
      mpt.db[newLeaf1.hash_node()] = newLeaf1
      mpt.db[newLeaf2.hash_node()] = newLeaf2
      mpt.db[newBranch.hash_node()] = newBranch
-
      return newBranch.hash_node()
+ }
+
+ func (mpt *MerklePatriciaTrie) breakLeafExcess(currNode Node, match int,  nibbles []uint8, encodedKey []uint8, newValue string, path bool) string{
+     delete(mpt.db, currNode.hash_node())
+     pathway := nibbles
+     if path {
+         pathway = encodedKey
+     }
+     newBranch := createNode(1, [17]string{}, []uint8{}, "")
+     extension := createNode(2, [17]string{}, pathway[0:match], newBranch.hash_node())
+     leafNode := createNode(2, [17]string{}, pathway[match+1:], newValue)
+     newBranch.branch_value[16] = currNode.flag_value.value
+     newBranch.branch_value[encodedKey[match]] = leafNode.hash_node()
+     mpt.db[leafNode.hash_node()] = leafNode
+     mpt.db[newBranch.hash_node()] = newBranch
+     mpt.db[extension.hash_node()] = extension
+     return extension.hash_node()
+
  }
 
 
