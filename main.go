@@ -12,13 +12,20 @@ func main() {
 	mpt.Insert("p", "apple")
 	mpt.Insert("aaaaa", "banana")
 	mpt.Insert("aaaap", "orange")
-
+	mpt.Insert("aa", "new")
+	mpt.Insert("aaaab", "candle")
 
 	fmt.Println("\nGet test")
 	apple := mpt.Get("p")
 	banana := mpt.Get("aaaaa")
+	orange := mpt.Get("aaaap")
+	newWord := mpt.Get("aa")
+	candle := mpt.Get("aaaab")
 	fmt.Println("Apple:", apple)
 	fmt.Println("Banana:", banana)
+	fmt.Println("Orange:", orange)
+	fmt.Println("New:", newWord)
+	fmt.Println("Candle:", candle)
 
 
 	//fmt.Println(p1.Compact_encode([]uint8{7, 0}))
@@ -31,7 +38,7 @@ func main() {
 	//-------------------//-------------------//------------------//-------------------//-------------------
 
 	//fmt.Println("Testing some values")
-	//encodedKey := []uint8{1, 6, 1, 6, 1, 6, 1}
+	//encodedKey := []uint8{1, 6, 1, 6}
 	//nibbles := []uint8{1, 6, 1, 6, 1, 6, 1, 6, 1}
 	//
 	//match := 0
@@ -40,7 +47,8 @@ func main() {
 	//}
 	//fmt.Println(encodedKey[0:match])
 	//fmt.Println(nibbles[0:match])
-	//
+	//fmt.Println(len(encodedKey))
+	//fmt.Println(match)
 	//fmt.Println(encodedKey[match:])
 	//fmt.Println(nibbles[match:])
 

@@ -1,5 +1,7 @@
 package p1
 
+import "fmt"
+
 /**
 Retrieves a new MPT
  */
@@ -81,13 +83,17 @@ find the matched portion of nibbles & encodedKey
  /**
  Breaks a leaf during insertion when there are no matches between input key and nibbles at leaf
   */
- func (mpt *MerklePatriciaTrie) breakLeafNoMatch(currNode Node, nibbles []uint8, encodedKey []uint8, newValue string) string {
+ func (mpt *MerklePatriciaTrie) breakNodeNoMatch(currNode Node, nibbles []uint8, encodedKey []uint8, newValue string, isLeaf bool) string {
      delete(mpt.db, currNode.hash_node())
-     encodedKey = append(encodedKey, 16)
-     nibbles = append(nibbles, 16)
-     newBranch := createNode(1, [17]string{}, []uint8{}, "")
-     newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue) //should we append 16
+     if isLeaf {
+         nibbles = append(nibbles, 16) //may be an extension or a leaf
+         encodedKey = append(encodedKey, 16) //always a leaf
+     }
+     //fmt.Println("One:", encodedKey)
+     //fmt.Println("Two:", nibbles)
+     newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue)
      newLeaf2 := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
+     newBranch := createNode(1, [17]string{}, []uint8{}, "")
      mpt.addLeavesToBranch(newLeaf1, &newBranch, encodedKey[0])
      mpt.addLeavesToBranch(newLeaf2, &newBranch, nibbles[0])
      mpt.addToMap(newLeaf1)
@@ -99,20 +105,24 @@ find the matched portion of nibbles & encodedKey
  /**
  Partial match in the leaf with excess hex values in both nibbles and incoming encodedKey
   */
- func (mpt *MerklePatriciaTrie) breakLeafDoubleExcess(currNode Node, match uint8, nibbles []uint8, encodedKey []uint8, newValue string) string {
+ func (mpt *MerklePatriciaTrie) breakNodeDoubleExcess(currNode Node, match uint8, nibbles []uint8, encodedKey []uint8, newValue string, isLeaf bool) string {
      delete(mpt.db, currNode.hash_node()) //delete my old leaf self from the db
      nibbles = append(nibbles, 16)
      encodedKey = append(encodedKey, 16)
-     newBranch := createNode(1, [17]string{}, []uint8{}, "") //create a branch node
-     extension := createNode(2, [17]string{}, nibbles[0:match], newBranch.hash_node()) //change myself to an extension node
+
+     if !isLeaf {
+         nibbles = nibbles[:len(nibbles)-1]
+     }
      newLeaf1 := createNode(2, [17]string{}, nibbles[match + 1:], currNode.flag_value.value)
      newLeaf2 := createNode(2, [17]string{}, encodedKey[match + 1:], newValue)
-     mpt.addToMap(newBranch)
-     mpt.addToMap(extension)
+     newBranch := createNode(1, [17]string{}, []uint8{}, "") //create a branch node
+     mpt.addLeavesToBranch(newLeaf1, &newBranch, nibbles[match])
+     mpt.addLeavesToBranch(newLeaf2, &newBranch, encodedKey[match])
+     extension := createNode(2, [17]string{}, nibbles[0:match], newBranch.hash_node()) //change myself to an extension node
      mpt.addToMap(newLeaf1)
      mpt.addToMap(newLeaf2)
-     mpt.addLeavesToBranch(newLeaf1, &newBranch, match)
-     mpt.addLeavesToBranch(newLeaf2, &newBranch, match)
+     mpt.addToMap(newBranch)
+     mpt.addToMap(extension)
      return extension.hash_node()
  }
 
@@ -122,24 +132,47 @@ find the matched portion of nibbles & encodedKey
  Branch node: extends from the extension
  leafNode: newLeaf node placed in the respective branch node array
   */
- func (mpt *MerklePatriciaTrie) breakLeafExcess(currNode Node, match uint8,  nibbles []uint8, encodedKey []uint8, newValue string, path bool) string{
+ func (mpt *MerklePatriciaTrie) breakLeafSingleExcess(currNode Node, match uint8,  nibbles []uint8, encodedKey []uint8, newValue string, excessPath bool) string{
      delete(mpt.db, currNode.hash_node())
      pathway := nibbles
      index := nibbles[match]
-     if path {
+     if excessPath {
          pathway = encodedKey
          index = encodedKey[match]
      }
      pathway = append(pathway, 16)
+     newLeaf := createNode(2, [17]string{}, pathway[match+1:], newValue)
      newBranch := createNode(1, [17]string{}, []uint8{}, "")
-     extension := createNode(2, [17]string{}, pathway[0:match], newBranch.hash_node())
-     leafNode := createNode(2, [17]string{}, pathway[match+1:], newValue)
-     mpt.addLeavesToBranch(leafNode, &newBranch, index)
      newBranch.branch_value[16] = currNode.flag_value.value
-     mpt.addToMap(leafNode)
+     mpt.addLeavesToBranch(newLeaf, &newBranch, index)
+     extension := createNode(2, [17]string{}, pathway[0:match], newBranch.hash_node())
+     mpt.addToMap(newLeaf)
      mpt.addToMap(newBranch)
      mpt.addToMap(extension)
      return extension.hash_node()
+ }
+
+ func (mpt *MerklePatriciaTrie) breakExtSingleExcess(currNode Node, match uint8, nibbles []uint8, encodedKey []uint8, newValue string, excessPath bool) string {
+     delete(mpt.db, currNode.hash_node())
+     pathway := nibbles
+     index := nibbles[match]
+     if excessPath {
+         pathway = encodedKey
+         index = encodedKey[match]
+     }
+     lowerExt := createNode(2, [17]string{}, pathway[match+1:], currNode.flag_value.value)
+     newBranch := createNode(1, [17]string{}, []uint8{}, "")
+     newBranch.branch_value[16] = newValue
+     mpt.addLeavesToBranch(lowerExt, &newBranch, index)
+     upperExt := createNode(2, [17]string{}, pathway[0:match], newBranch.hash_node())
+     mpt.addToMap(lowerExt)
+     mpt.addToMap(newBranch)
+     mpt.addToMap(upperExt)
+     fmt.Println(1)
+     fmt.Println(upperExt.hash_node())
+     return upperExt.hash_node()
+
+
  }
 
  /**
@@ -153,7 +186,5 @@ find the matched portion of nibbles & encodedKey
  Adds the newLeaf to the branch node at its respective position
   */
 func (mpt *MerklePatriciaTrie) addLeavesToBranch(newLeaf Node, branch *Node, index uint8) {
-
     branch.branch_value[index] = newLeaf.hash_node()
-
 }
