@@ -57,7 +57,6 @@ func (mpt *MerklePatriciaTrie) GetHelper2(node string, path []uint8, position in
 	case 0:
 		return ""
 	case 1:
-		fmt.Println("Branch")
 		if len(path) == 0 {
 			return currNode.branch_value[16]
 		}
@@ -66,7 +65,6 @@ func (mpt *MerklePatriciaTrie) GetHelper2(node string, path []uint8, position in
 	case 2:
 		isLeaf := isLeaf(currNode)
 		nibbles := Compact_decode(currNode.flag_value.encoded_prefix)
-		fmt.Println("Nibbles: ", nibbles)
 		if reflect.DeepEqual(nibbles, path) && isLeaf {
 			return currNode.flag_value.value
 		} else if !reflect.DeepEqual(nibbles, path) && isLeaf {
@@ -121,13 +119,13 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 	case 0:
 		encodedKey = append(encodedKey, 16)
 		leaf := createNode(2, [17]string{}, encodedKey, newValue)
-		mpt.db[leaf.hash_node()] = leaf
+		mpt.addToMap(leaf)
 		return leaf.hash_node()
 	case 1:
 		if len(encodedKey) == 0 {
-			currNode.branch_value[16] = newValue
 			delete(mpt.db, currHash)
-			mpt.db[currNode.hash_node()] = currNode
+			currNode.branch_value[16] = newValue
+			mpt.addToMap(currNode)
 			return currNode.hash_node()
 		}
 
@@ -135,8 +133,10 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 			delete(mpt.db, currHash)
 			encodedKey = append(encodedKey, 16)
 			newLeaf := createNode(2, [17]string{}, encodedKey[1:], newValue)
-			currNode.branch_value[encodedKey[0]] = newLeaf.hash_node()
-			mpt.db[currNode.hash_node()] = currNode
+			mpt.addLeavesToBranch(newLeaf, &currNode, encodedKey[0])
+			//currNode.branch_value[encodedKey[0]] = newLeaf.hash_node()
+			mpt.addToMap(currNode)
+			//mpt.db[currNode.hash_node()] = currNode
 			return currNode.hash_node()
 		} else {
 			nextHash := currNode.branch_value[encodedKey[0]]
@@ -150,9 +150,12 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 		}
 	case 2:
 		nibbles := Compact_decode(currNode.flag_value.encoded_prefix)
+		match := findMatch(0, nibbles, encodedKey)
 		fmt.Println("nibbles", nibbles)
+		fmt.Println("Encoded Key:", encodedKey)
 		if isLeaf(currNode) {
 			if !reflect.DeepEqual(encodedKey, nibbles) { //no match
+				fmt.Println("No Match")
 				return mpt.breakLeafNoMatch(currNode, nibbles, encodedKey, newValue)
 			} else if reflect.DeepEqual(encodedKey, nibbles) { //full match, replace value
 				delete(mpt.db, currHash)
@@ -160,17 +163,8 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 				mpt.db[currNode.hash_node()] = currNode
 				return currNode.hash_node()
 			} else { //partial matches - 3 types
-				match := findMatch(0, nibbles, encodedKey)
 				if len(encodedKey[match:]) != 0 && len(nibbles[match:]) != 0 { //excess path and excess nibbles
-					delete(mpt.db, currHash) //delete my old leaf self from the db
-					newBranch := createNode(1, [17]string{}, []uint8{}, "") //create a branch node
-					extension := createNode(2, [17]string{}, Compact_encode(nibbles[0:match]), newBranch.hash_node()) //change myself to an extension node
-					mpt.db[newBranch.hash_node()] = newBranch //add the new branch into the db
-					mpt.db[extension.hash_node()] = extension //add my new self into the db
-					//TODO Not sure
-					mpt.insertHelp(parent, extension.hash_node(), nibbles, currNode.flag_value.value)
-					mpt.insertHelp(parent, extension.hash_node(), encodedKey, newValue)
-					return extension.hash_node()
+					return mpt.breakLeafDoubleExcess(currNode, match, nibbles, encodedKey, newValue)
 				} else if len(encodedKey[match:]) != 0 && len(nibbles[match:]) == 0 { //partial match with excess path only
 					return mpt.breakLeafExcess(currNode, match, nibbles, encodedKey, newValue, true)
 				} else if len(encodedKey[match:]) == 0 && len(nibbles[match:]) != 0 { //partial match with excess nibbles
@@ -178,54 +172,31 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 				}
 			}
 		} else { //is extension
-			length := len(nibbles)
-			if !reflect.DeepEqual(encodedKey, nibbles) { //no match, should we just check first value?
-				newBranch := createNode(1, [17]string{}, []uint8{}, "")
-				delete(mpt.db, currHash)
-				mpt.insertHelp(newBranch.hash_node(), newBranch.branch_value[nibbles[0]], nibbles[1:], currNode.flag_value.value)
-				mpt.insertHelp(newBranch.hash_node(), newBranch.branch_value[encodedKey[0]], encodedKey[1:], newValue)
-				mpt.db[newBranch.hash_node()] = newBranch
-				return newBranch.hash_node()
-			} else if reflect.DeepEqual(nibbles, encodedKey) { //exact match
-				mpt.insertHelp(currHash, currNode.flag_value.value, encodedKey[length:], newValue)
-				delete(mpt.db, currHash)
-				mpt.db[currNode.hash_node()] = currNode
-				return currNode.hash_node()
-			}
-
-			//if we have partial matches
-				//excess path and excess nibbles
-					//create a branch node
-					//recurse down with the excess path
-					//recurse down with the excess nibbles
-				//excess nibbles only
-					//recurse down the nibbles
-				//excess path only
-					//recurse down with the paths
-			if reflect.DeepEqual(encodedKey[:length], nibbles) {  //excess path
-				newHash := mpt.insertHelp(currHash, currNode.flag_value.value, encodedKey[length:], newValue) //recurse down further
-				if newHash != currNode.flag_value.value {
-					delete(mpt.db, currNode.flag_value.value)
-					mpt.db[currNode.hash_node()] = currNode
-					return currNode.hash_node()
-				}
-				return currNode.hash_node()
+			fmt.Println("Entering Extension Node")
+			//length := len(nibbles)
+			//if !reflect.DeepEqual(encodedKey, nibbles) { //no match, should we just check first value?
+			//	newBranch := createNode(1, [17]string{}, []uint8{}, "")
+			//	delete(mpt.db, currHash)
+			//	mpt.insertHelp(newBranch.hash_node(), newBranch.branch_value[nibbles[0]], nibbles[1:], currNode.flag_value.value)
+			//	mpt.insertHelp(newBranch.hash_node(), newBranch.branch_value[encodedKey[0]], encodedKey[1:], newValue)
+			//	mpt.db[newBranch.hash_node()] = newBranch
+			//	return newBranch.hash_node()
+			//} else if reflect.DeepEqual(nibbles, encodedKey) { //exact match
+			//	mpt.insertHelp(currHash, currNode.flag_value.value, encodedKey[length:], newValue)
+			//	delete(mpt.db, currHash)
+			//	mpt.db[currNode.hash_node()] = currNode
+			//	return currNode.hash_node()
+			//}
+			//if reflect.DeepEqual(encodedKey[:length], nibbles) {  //excess path
+			//	newHash := mpt.insertHelp(currHash, currNode.flag_value.value, encodedKey[length:], newValue) //recurse down further
+			//	if newHash != currNode.flag_value.value {
+			//		delete(mpt.db, currNode.flag_value.value)
+			//		mpt.db[currNode.hash_node()] = currNode
+			//		return currNode.hash_node()
+			//	}
+			//	return currNode.hash_node()
 			}
 		}
-	}
-	//case2 - nodeType is an extension/leaf node
-		//decode nibbles to check if node is extension or leaf
-		//if leaf
-		//if extension
-			//2. find matching pattern between encoded_key and extension nibbles
-			//if no matching patterns
-
-			//if there are matching patterns
-				//change nibbles in extension node up to the matched portion
-				//hash the extension node and add it to the DB
-				//create a new branch node
-				//hash the branch node and add it to the DB
-				//return the 'hash string', remainder of the encoded key, value
 	return currHash
 }
 
@@ -278,7 +249,7 @@ func Compact_encode(hex_array []uint8) []uint8 {
 		flags = append(flags, 0)
 		hex_array = append(flags, hex_array...)
 	}
-	//fmt.Println("hex:", hex_array)
+	fmt.Println("hex:", hex_array)
 	result := make([]uint8, 0)
 	for i:= 0; i < len(hex_array); i += 2 {
 		result = append(result, 16*hex_array[i]+hex_array[i+1])
@@ -294,9 +265,10 @@ Reverse the compact_encode function
 func Compact_decode(encoded_arr []uint8) []uint8 {
 
 	unpack := ConvertToHex(encoded_arr)
-	if unpack[0] < 2 { //Extension node, remove 16
-		unpack = unpack[:len(unpack)-1]
-	}
+	//if unpack[0] < 2 { //Extension node, remove 16
+	//	unpack = unpack[:len(unpack)-1]
+	//}
+
 	checkPrefix := 2 - unpack[0]&1
 	//if unpack[len(unpack)-1] == 16 {
 	//	return unpack[checkPrefix:len(unpack)-1]
