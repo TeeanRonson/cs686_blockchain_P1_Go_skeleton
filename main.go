@@ -7,10 +7,19 @@ import (
 
 func main() {
 
-	fmt.Println("Testing the Insert method")
-	mpt := p1.GetMPTrie()
-	mpt.Insert("p", "apple")
-	mpt.Insert("aaaaa", "banana")
+	//fmt.Println("Testing the Insert method")
+	//mpt := p1.GetMPTrie()
+	//mpt.Insert("p", "apple")
+	//mpt.Insert("aaaaa", "banana")
+	////mpt.Insert("aaaap", "orange")
+	//
+	//
+	//
+	//fmt.Println("\nGet test")
+	//apple := mpt.Get("p")
+	////banana := mpt.Get("aaaaa")
+	//fmt.Println("Apple:", apple)
+	//fmt.Println("Banana:", banana)
 
 
 	//fmt.Println(p1.Compact_encode([]uint8{7, 0}))
@@ -60,7 +69,16 @@ func main() {
 	//fmt.Println("Test Decode:", p1.CompactToHex([]uint8 {15, 1, 12, 11, 8, 16}))
 
 
-	//fmt.Println("\nTest Cases")
+	fmt.Println("\nTest Cases")
 	//p1.Test_compact_encode()
+
+	fmt.Println(p1.Compact_encode([]uint8{1, 2, 3, 4, 5}))
+	fmt.Println()
+	fmt.Println(p1.Compact_encode([]uint8{0, 1, 2, 3, 4, 5}))
+	fmt.Println()
+	fmt.Println(p1.Compact_encode([]uint8{0, 15, 1, 12, 11, 8, 16}))
+	fmt.Println()
+	fmt.Println(p1.Compact_decode([]uint8{32, 15, 28, 184}))
+
 
 }
