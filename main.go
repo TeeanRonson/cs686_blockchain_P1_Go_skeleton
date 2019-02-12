@@ -7,25 +7,25 @@ import (
 
 func main() {
 
-	fmt.Println("Testing the Insert method")
+	//fmt.Println("Testing the Insert method")
 	mpt := p1.GetMPTrie()
-	mpt.Insert("p", "apple")
-	mpt.Insert("aaaaa", "banana")
-	mpt.Insert("aaaap", "orange")
-	mpt.Insert("aa", "new")
-	mpt.Insert("aaaab", "candle")
-
-	fmt.Println("\nGet test")
-	apple := mpt.Get("p")
-	banana := mpt.Get("aaaaa")
-	orange := mpt.Get("aaaap")
-	newWord := mpt.Get("aa")
-	candle := mpt.Get("aaaab")
-	fmt.Println("Apple:", apple)
-	fmt.Println("Banana:", banana)
-	fmt.Println("Orange:", orange)
-	fmt.Println("New:", newWord)
-	fmt.Println("Candle:", candle)
+	//mpt.Insert("p", "apple")
+	//mpt.Insert("aaaaa", "banana")
+	//mpt.Insert("aaaap", "orange")
+	//mpt.Insert("aa", "new")
+	//mpt.Insert("aaaab", "candle")
+	//
+	//fmt.Println("\nGet test")
+	//apple := mpt.Get("p")
+	//banana := mpt.Get("aaaaa")
+	//orange := mpt.Get("aaaap")
+	//newWord := mpt.Get("aa")
+	//candle := mpt.Get("aaaab")
+	//fmt.Println("Apple:", apple)
+	//fmt.Println("Banana:", banana)
+	//fmt.Println("Orange:", orange)
+	//fmt.Println("New:", newWord)
+	//fmt.Println("Candle:", candle)
 
 
 	//fmt.Println(p1.Compact_encode([]uint8{7, 0}))
@@ -37,7 +37,9 @@ func main() {
 
 	//-------------------//-------------------//------------------//-------------------//-------------------
 
-	//fmt.Println("Testing some values")
+	fmt.Println("Testing some values")
+
+	mpt.Test()
 	//encodedKey := []uint8{1, 6, 1, 6}
 	//nibbles := []uint8{1, 6, 1, 6, 1, 6, 1, 6, 1}
 	//
@@ -51,7 +53,6 @@ func main() {
 	//fmt.Println(match)
 	//fmt.Println(encodedKey[match:])
 	//fmt.Println(nibbles[match:])
-
 
 	//dog := p1.EncodeToHex("dog")
 	//fmt.Println("dog:", dog)

@@ -89,8 +89,10 @@ find the matched portion of nibbles & encodedKey
          nibbles = append(nibbles, 16) //may be an extension or a leaf
          encodedKey = append(encodedKey, 16) //always a leaf
      }
-     //fmt.Println("One:", encodedKey)
-     //fmt.Println("Two:", nibbles)
+
+     if len(encodedKey[1:]) == 0 {
+         //add new value to newBranch[16] = newValue
+     }
      newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue)
      newLeaf2 := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
      newBranch := createNode(1, [17]string{}, []uint8{}, "")
