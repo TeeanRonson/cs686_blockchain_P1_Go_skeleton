@@ -87,11 +87,11 @@ find the matched portion of nibbles & encodedKey
      delete(mpt.db, currNode.hash_node())
      if isLeaf {
          nibbles = append(nibbles, 16) //may be an extension or a leaf
-         encodedKey = append(encodedKey, 16) //always a leaf
      }
-
+     encodedKey = append(encodedKey, 16)
      if len(encodedKey[1:]) == 0 {
-         //add new value to newBranch[16] = newValue
+        //if there are no more values in the encodedKey
+        //we add the newValue into position 16 instead of creating a new leaf??
      }
      newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue)
      newLeaf2 := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
@@ -115,11 +115,18 @@ find the matched portion of nibbles & encodedKey
      if !isLeaf {
          nibbles = nibbles[:len(nibbles)-1]
      }
+     fmt.Println(nibbles[match+1:])
+     fmt.Println(encodedKey[match+1:], newValue)
      newLeaf1 := createNode(2, [17]string{}, nibbles[match + 1:], currNode.flag_value.value)
      newLeaf2 := createNode(2, [17]string{}, encodedKey[match + 1:], newValue)
      newBranch := createNode(1, [17]string{}, []uint8{}, "") //create a branch node
-     mpt.addLeavesToBranch(newLeaf1, &newBranch, nibbles[match])
-     mpt.addLeavesToBranch(newLeaf2, &newBranch, encodedKey[match])
+     if len(nibbles[match+1:]) == 0 {
+         newBranch.branch_value[nibbles[match]] = currNode.flag_value.value
+         mpt.addLeavesToBranch(newLeaf2, &newBranch, encodedKey[match])
+     } else {
+         mpt.addLeavesToBranch(newLeaf1, &newBranch, nibbles[match])
+         mpt.addLeavesToBranch(newLeaf2, &newBranch, encodedKey[match])
+     }
      extension := createNode(2, [17]string{}, nibbles[0:match], newBranch.hash_node()) //change myself to an extension node
      mpt.addToMap(newLeaf1)
      mpt.addToMap(newLeaf2)
