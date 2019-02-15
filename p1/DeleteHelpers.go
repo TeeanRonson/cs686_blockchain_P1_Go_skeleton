@@ -41,16 +41,26 @@ Finds the non empty space in branch node
       return result
   }
 
-  func (mpt *MerklePatriciaTrie) mergeBranchAndLeaf(currNode Node, childNode Node) Node {
-      currNibble := []uint8{findNonEmptySpace(currNode)}
+  func (mpt *MerklePatriciaTrie) mergeBranchAndLeaf(currNode Node, childNode Node, branchNibble []uint8) Node {
+      //currNibble := []uint8{findNonEmptySpace(currNode)}
       //childNode := mpt.db[currNode.branch_value[currNibble[0]]]
       childNibbles  := Compact_decode(childNode.flag_value.encoded_prefix)
-      newLeafNibbles := append(mergeArrays(currNibble, childNibbles), 16)
+      newLeafNibbles := append(mergeArrays(branchNibble, childNibbles), 16)
       mergedLeaf := createNode(2, [17]string{}, newLeafNibbles, childNode.flag_value.value)
       delete(mpt.db, currNode.hash_node())
       delete(mpt.db, childNode.hash_node())
       mpt.addToMap(mergedLeaf)
       return mergedLeaf
+  }
+
+  func (mpt *MerklePatriciaTrie) mergeBranchAndExtension(currNode Node, childNode Node, branchNibble[]uint8) Node {
+      childNibbles := Compact_decode(childNode.flag_value.encoded_prefix)
+      newNibbles := mergeArrays(branchNibble, childNibbles)
+      newExtension := createNode(2, [17]string{}, newNibbles, childNode.flag_value.value)
+      delete(mpt.db, currNode.hash_node())
+      delete(mpt.db, childNode.hash_node())
+      mpt.addToMap(newExtension)
+      return newExtension
   }
 
   func (mpt *MerklePatriciaTrie) checkBranch(branchCount int, currNode Node)  (string, Node, error) {
@@ -61,17 +71,25 @@ Finds the non empty space in branch node
           //if the position is at position 16
           //then we return "", currNode, nil
           currNibble := []uint8{findNonEmptySpace(currNode)}
+          //fmt.Println(currNibble[0])
           if currNibble[0] == 16 {
               return "", currNode, nil
           } else {
               childNode := mpt.db[currNode.branch_value[currNibble[0]]]
-              if isLeaf(childNode) {
-                  mergedLeaf := mpt.mergeBranchAndLeaf(currNode, childNode)
-                  return mergedLeaf.hash_node(), mergedLeaf, nil
-              } else {
-                  //below me is an extension node
-                  //merge myself with the extension node
-                  //push me up
+              switch childNode.node_type {
+              case 1:
+                  delete(mpt.db, currNode.hash_node())
+                  newExtension := createNode(2, [17]string{}, currNibble, childNode.hash_node())
+                  mpt.addToMap(newExtension)
+                  return newExtension.hash_node(), newExtension, nil
+              case 2:
+                  if isLeaf(childNode) {
+                      mergedLeaf := mpt.mergeBranchAndLeaf(currNode, childNode, currNibble)
+                      return mergedLeaf.hash_node(), mergedLeaf, nil
+                  } else {
+                      mergedExtension := mpt.mergeBranchAndExtension(currNode, childNode, currNibble)
+                      return mergedExtension.hash_node(), mergedExtension, nil
+                  }
               }
           }
       }

@@ -141,7 +141,8 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 			return currNode.hash_node()
 		}
 
-		if currNode.branch_value[encodedKey[0]] == "" {
+		nextHash := currNode.branch_value[encodedKey[0]]
+		if  nextHash == "" {
 			delete(mpt.db, currHash)
 			encodedKey = append(encodedKey, 16)
 			newLeaf := createNode(2, [17]string{}, encodedKey[1:], newValue)
@@ -149,14 +150,10 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 			mpt.addToMap(currNode)
 			return currNode.hash_node()
 		} else {
-			fmt.Println("Into Branch")
-			nextHash := currNode.branch_value[encodedKey[0]]
-			//fmt.Println(encodedKey[1:])
+			//fmt.Println("Into Branch")
 			newHash := mpt.insertHelp(currHash, nextHash, encodedKey[1:], newValue)
-			//fmt.Println(2)
 			if newHash != nextHash {
 				delete(mpt.db, currHash)
-				//fmt.Println(3)
 				currNode.branch_value[encodedKey[0]] = newHash
 				//fmt.Println("Checking currNode:", currNode)
 				mpt.addToMap(currNode)
@@ -195,7 +192,7 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 			if reflect.DeepEqual(nibbles, encodedKey) { //exact match
 				return mpt.insertHelp(currHash, currNode.flag_value.value, encodedKey[match:], newValue)
 			} else if match == 0 { //no match
-				fmt.Println("No match")
+				fmt.Println("Nooo match")
 				return mpt.breakNodeNoMatch(currNode, nibbles, encodedKey, newValue, false)
 			} else if match > 0 && int(match) <= len(nibbles) {
 				fmt.Println("Partial Match")
@@ -253,7 +250,10 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 	case 0:
 		return "", currNode, errors.New("Path Not Found")
 	case 1:
+		fmt.Println("pathCheck:", path)
+		fmt.Println("Length", len(path))
 		if len(path) == 0 {
+			fmt.Println("Delete moment")
 			delete(mpt.db, currHash)
 			currNode.branch_value[16] = ""
 			branchCount := branchItems(currNode)
@@ -266,6 +266,7 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 				//return error and same hashvalue
 				return currHash, currNode, errors.New("Path Not Found")
 			} else { //recurse down
+				fmt.Println("pathhere:", path)
 				newHash, child, err := mpt.deleteHelper(currHash, nextHash, path[1:])
 				//If there is an error, that means we couldn't find the path
 				if err != nil || newHash == nextHash {
@@ -278,7 +279,7 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 						delete(mpt.db, currHash)
 						currNode.branch_value[path[0]] = newHash
 						branchCount := branchItems(currNode)
-						fmt.Println(2)
+						//fmt.Println("Count:", branchCount)
 						//check the branch
 						return mpt.checkBranch(branchCount, currNode)
 					}
@@ -291,48 +292,45 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 		if isLeaf(currNode) {
 			if reflect.DeepEqual(nibbles, path) { //exact match
 				delete(mpt.db, currHash)
-				fmt.Println(1)
+				fmt.Println("In Leaf")
 				return "", currNode, nil
 			} else if len(path[match:]) > 0 || match == 0 {
 				return currHash, currNode, errors.New("Path Not Found")
 			}
 		} else {
 			//if extension
+			//If there are still more nibbles, return error
 			if len(path[match:]) == 0 && len(nibbles[match:]) != 0 {
 				return currHash, currNode, errors.New("Path Not Found")
 			} else if reflect.DeepEqual(nibbles, path) || (len(nibbles[match:]) == 0 && len(path[match:]) != 0) {
 				//we have an exact match or we have some extra path but no more nibbles
+				//so we recurse further down
 				nextHash := currNode.flag_value.value
 				newHash, child, err := mpt.deleteHelper(currHash, nextHash, path[match:])
 				if err != nil {
-					return currHash, currNode, errors.New("Path Not Found")
+					return currHash, currNode, err
 				}
-
 				if newHash == "" {
-					//it is a branch node with value position at [16], not a leaf
-					if !isLeaf(child) {
-						delete(mpt.db, currHash)
-						nibbles = append(nibbles, 16)
-						newLeaf := createNode(2, [17]string{}, nibbles, child.flag_value.value)
-						mpt.addToMap(newLeaf)
-						return newLeaf.hash_node(), newLeaf, nil
+					if branchItems(child) == 0 {
+						return "", currNode, nil
 					}
-					//or
-					//that everything in the branch node below me has been deleted
-					//in which case I also return ""
+					delete(mpt.db, currHash)
+					nibbles = append(nibbles, 16)
+					newLeaf := createNode(2, [17]string{}, nibbles, child.branch_value[16])
+					mpt.addToMap(newLeaf)
+					return newLeaf.hash_node(), newLeaf, nil
 
 				} else if newHash != nextHash {
 					if isLeaf(child) {
+						delete(mpt.db, currHash)
 						extNibbles := Compact_decode(currNode.flag_value.encoded_prefix)
 						childNibbles := Compact_decode(child.flag_value.encoded_prefix)
 						newNibbles := append(mergeArrays(extNibbles, childNibbles), 16)
 						newLeaf := createNode(2, [17]string{}, newNibbles, child.flag_value.value)
-						delete(mpt.db, currHash)
 						delete(mpt.db, child.hash_node())
 						mpt.addToMap(newLeaf)
 						return newLeaf.hash_node(), newLeaf, nil
 					} else {
-						//it must be branch node
 						delete(mpt.db, currHash)
 						mpt.addToMap(currNode)
 						return currNode.hash_node(), currNode, nil
@@ -353,7 +351,7 @@ func (mpt *MerklePatriciaTrie) Delete(key string) (string, error) {
 		return "", errors.New("No Input key")
 	}
 	fmt.Println("\nNewDeletion")
-	fmt.Println(mpt.db)
+	fmt.Println("Current root:", mpt.root)
 	encodedKey := EncodeToHex(key)
 	fmt.Println("Delete Path:", encodedKey)
 	newHash, child, err := mpt.deleteHelper("", mpt.root, encodedKey)

@@ -85,22 +85,34 @@ find the matched portion of nibbles & encodedKey
   */
  func (mpt *MerklePatriciaTrie) breakNodeNoMatch(currNode Node, nibbles []uint8, encodedKey []uint8, newValue string, isLeaf bool) string {
      delete(mpt.db, currNode.hash_node())
+     encodedKey = append(encodedKey, 16)
      if isLeaf {
          nibbles = append(nibbles, 16) //may be an extension or a leaf
      }
-     encodedKey = append(encodedKey, 16)
-     if len(encodedKey[1:]) == 0 {
-        //if there are no more values in the encodedKey
-        //we add the newValue into position 16 instead of creating a new leaf??
-     }
+     //case 1
+     //when both still have items and we dont have a match
+     //case2
+     //when the encoded key has no values, and the nibbles has 1
+     //create a branch node, place the encodedkey
+     //case 3
+     //when the nibbles has no values and the encodedkey has 1
+     fmt.Println("Position:", nibbles[0])
+     fmt.Println("Leftover Nibbles :", nibbles[1:])
      newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue)
      newLeaf2 := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
      newBranch := createNode(1, [17]string{}, []uint8{}, "")
-     mpt.addLeavesToBranch(newLeaf1, &newBranch, encodedKey[0])
-     mpt.addLeavesToBranch(newLeaf2, &newBranch, nibbles[0])
-     mpt.addToMap(newLeaf1)
-     mpt.addToMap(newLeaf2)
-     mpt.addToMap(newBranch)
+     if len(nibbles[1:]) == 0 {
+         mpt.addLeavesToBranch(newLeaf1, &newBranch, encodedKey[0])
+         newBranch.branch_value[nibbles[0]] = currNode.flag_value.value
+         mpt.addToMap(newLeaf1)
+         mpt.addToMap(newBranch)
+     } else {
+         mpt.addLeavesToBranch(newLeaf1, &newBranch, encodedKey[0])
+         mpt.addLeavesToBranch(newLeaf2, &newBranch, nibbles[0])
+         mpt.addToMap(newLeaf1)
+         mpt.addToMap(newLeaf2)
+         mpt.addToMap(newBranch)
+     }
      return newBranch.hash_node()
  }
 
@@ -111,15 +123,16 @@ find the matched portion of nibbles & encodedKey
      delete(mpt.db, currNode.hash_node()) //delete my old leaf self from the db
      nibbles = append(nibbles, 16)
      encodedKey = append(encodedKey, 16)
-
      if !isLeaf {
          nibbles = nibbles[:len(nibbles)-1]
      }
      fmt.Println(nibbles[match+1:])
      fmt.Println(encodedKey[match+1:], newValue)
+
      newLeaf1 := createNode(2, [17]string{}, nibbles[match + 1:], currNode.flag_value.value)
      newLeaf2 := createNode(2, [17]string{}, encodedKey[match + 1:], newValue)
      newBranch := createNode(1, [17]string{}, []uint8{}, "") //create a branch node
+
      if len(nibbles[match+1:]) == 0 {
          newBranch.branch_value[nibbles[match]] = currNode.flag_value.value
          mpt.addLeavesToBranch(newLeaf2, &newBranch, encodedKey[match])
