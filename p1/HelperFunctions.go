@@ -82,38 +82,60 @@ find the matched portion of nibbles & encodedKey
 
  /**
  Breaks a leaf during insertion when there are no matches between input key and nibbles at leaf
-  */
- func (mpt *MerklePatriciaTrie) breakNodeNoMatch(currNode Node, nibbles []uint8, encodedKey []uint8, newValue string, isLeaf bool) string {
-     delete(mpt.db, currNode.hash_node())
-     encodedKey = append(encodedKey, 16)
-     if isLeaf {
-         nibbles = append(nibbles, 16) //may be an extension or a leaf
-     }
-     //case 1
+ //case 1
      //when both still have items and we dont have a match
      //case2
      //when the encoded key has no values, and the nibbles has 1
      //create a branch node, place the encodedkey
      //case 3
      //when the nibbles has no values and the encodedkey has 1
-     fmt.Println("Position:", nibbles[0])
-     fmt.Println("Leftover Nibbles :", nibbles[1:])
-     newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue)
-     newLeaf2 := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
-     newBranch := createNode(1, [17]string{}, []uint8{}, "")
-     if len(nibbles[1:]) == 0 {
+  */
+ func (mpt *MerklePatriciaTrie) breakNodeNoMatch(currNode Node, nibbles []uint8, encodedKey []uint8, newValue string, isLeaf bool) string {
+     delete(mpt.db, currNode.hash_node())
+
+     //Extension node wont come in here since we cant have "" values in the nibbles
+     if len(nibbles) == 0 && len(encodedKey) != 0 {
+         encodedKey = append(encodedKey, 16)
+         newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue)
+         newBranch := createNode(1, [17]string{}, []uint8{}, "")
+         newBranch.branch_value[16] = currNode.flag_value.value
          mpt.addLeavesToBranch(newLeaf1, &newBranch, encodedKey[0])
-         newBranch.branch_value[nibbles[0]] = currNode.flag_value.value
          mpt.addToMap(newLeaf1)
          mpt.addToMap(newBranch)
-     } else {
-         mpt.addLeavesToBranch(newLeaf1, &newBranch, encodedKey[0])
+         return newBranch.hash_node()
+     } else if len(encodedKey) == 0 && len(nibbles) != 0 {
+         if isLeaf {
+             nibbles = append(nibbles, 16) //may be an extension or a leaf
+         }
+         newLeaf2 := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
+         newBranch := createNode(1, [17]string{}, []uint8{}, "")
+         newBranch.branch_value[16] = newValue
          mpt.addLeavesToBranch(newLeaf2, &newBranch, nibbles[0])
-         mpt.addToMap(newLeaf1)
          mpt.addToMap(newLeaf2)
          mpt.addToMap(newBranch)
+         return newBranch.hash_node()
+     } else {
+         if isLeaf {
+             nibbles = append(nibbles, 16) //may be an extension or a leaf
+         }
+         encodedKey = append(encodedKey, 16)
+         newLeaf1 := createNode(2, [17]string{}, encodedKey[1:], newValue)
+         newLeaf2 := createNode(2, [17]string{}, nibbles[1:], currNode.flag_value.value)
+         newBranch := createNode(1, [17]string{}, []uint8{}, "")
+         if len(nibbles[1:]) == 0 {
+             newBranch.branch_value[nibbles[0]] = currNode.flag_value.value
+             mpt.addLeavesToBranch(newLeaf1, &newBranch, encodedKey[0])
+             mpt.addToMap(newLeaf1)
+             mpt.addToMap(newBranch)
+         } else {
+             mpt.addLeavesToBranch(newLeaf1, &newBranch, encodedKey[0])
+             mpt.addLeavesToBranch(newLeaf2, &newBranch, nibbles[0])
+             mpt.addToMap(newLeaf1)
+             mpt.addToMap(newLeaf2)
+             mpt.addToMap(newBranch)
+         }
+         return newBranch.hash_node()
      }
-     return newBranch.hash_node()
  }
 
  /**
@@ -136,18 +158,19 @@ find the matched portion of nibbles & encodedKey
      if len(nibbles[match+1:]) == 0 {
          newBranch.branch_value[nibbles[match]] = currNode.flag_value.value
          mpt.addLeavesToBranch(newLeaf2, &newBranch, encodedKey[match])
+         mpt.addToMap(newLeaf2)
+         mpt.addToMap(newBranch)
      } else {
          mpt.addLeavesToBranch(newLeaf1, &newBranch, nibbles[match])
          mpt.addLeavesToBranch(newLeaf2, &newBranch, encodedKey[match])
+         mpt.addToMap(newLeaf1)
+         mpt.addToMap(newLeaf2)
+         mpt.addToMap(newBranch)
      }
      extension := createNode(2, [17]string{}, nibbles[0:match], newBranch.hash_node()) //change myself to an extension node
-     mpt.addToMap(newLeaf1)
-     mpt.addToMap(newLeaf2)
-     mpt.addToMap(newBranch)
      mpt.addToMap(extension)
      return extension.hash_node()
  }
-
  /**
  Breaks a leaf during insertion when there is a partial match between nibbles and encodedkey
  Extension node: stores the partial matched
@@ -155,6 +178,7 @@ find the matched portion of nibbles & encodedKey
  leafNode: newLeaf node placed in the respective branch node array
   */
  func (mpt *MerklePatriciaTrie) breakLeafSingleExcess(currNode Node, match uint8,  nibbles []uint8, encodedKey []uint8, newValue string, excessPath bool) string{
+     //fmt.Println(1)
      delete(mpt.db, currNode.hash_node())
      pathway := nibbles
      index := nibbles[match]

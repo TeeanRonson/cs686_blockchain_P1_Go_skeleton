@@ -144,13 +144,87 @@ func TestCharles4InsertAndDelete() {
     mpt.Insert("ap", "banana")
     mpt.Insert("bc", "new")
 
-    fmt.Println("\nDeleting values")
-    deleteC, err1 := mpt.Delete("c")
-    fmt.Println(deleteC, err1)
+    //fmt.Println("\nDeleting values")
+    //deleteC, err1 := mpt.Delete("c")
+    //fmt.Println(deleteC, err1)
 
     deleteNew, err2 := mpt.Delete("bc")
     fmt.Println(deleteNew, err2)
 
     banana := mpt.Get("ap")
     fmt.Println("Banana:", banana)
+}
+
+func TestCharles5InsertAndDelete() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("aaaa", "apple")
+    mpt.Insert("aaap", "banana")
+    mpt.Insert("a", "new")
+
+    fmt.Println("\nDeleting values")
+    deleteC, err1 := mpt.Delete("c")
+    fmt.Println(deleteC, err1)
+
+    deleteNew, err2 := mpt.Delete("a")
+    fmt.Println(deleteNew, err2)
+
+    apple := mpt.Get("aaaa")
+    fmt.Println("Banana:", apple)
+}
+
+
+func TestCharles6InsertAndDelete() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("aaa", "apple")
+    mpt.Insert("aap", "banana")
+    mpt.Insert("bc", "new")
+
+    fmt.Println("\nDeleting values")
+    deleteC, err1 := mpt.Delete("c")
+    fmt.Println(deleteC, err1)
+
+}
+
+func TestLeaf1() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("a", "apple")
+    mpt.Insert("b", "banana")
+    mpt.Insert("a", "new")
+
+    a2 := mpt.Get("a")
+    fmt.Println("Get a = new:", a2)
+
+    fmt.Println("\nDeleting values")
+    deleteC, err1 := mpt.Delete("c")
+    fmt.Println(deleteC, err1)
+
+    deleteNew, err2 := mpt.Delete("a")
+    fmt.Println(deleteNew, err2)
+
+}
+
+func TestLeaf2() {
+
+mpt := GetMPTrie()
+fmt.Println("Inserting values")
+mpt.Insert("a", "apple")
+mpt.Insert("b", "banana")
+mpt.Insert("ab", "new")
+
+fmt.Println("\nDeleting values")
+//deleteC, err1 := mpt.Delete("c")
+//fmt.Println(deleteC, err1)
+
+getNew := mpt.Get("ab")
+fmt.Println("New:", getNew)
+
+deleteNew, err2 := mpt.Delete("ab")
+fmt.Println(deleteNew, err2)
+
 }

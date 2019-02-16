@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4badd353-da57-4286-b8d7-16b276dd4d74" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/p1/testingMPT.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/p1/DeleteHelpers.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/DeleteHelpers.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/p1/HelperFunctions.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/HelperFunctions.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1/testingMPT.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/testingMPT.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,23 +15,32 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.45537898">
+    <splitter split-orientation="horizontal" split-proportion="0.7267726">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file pinned="false" current-in-tab="false">
+          <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2150">
-                  <caret line="282" column="42" lean-forward="true" selection-start-line="282" selection-start-column="42" selection-end-line="282" selection-end-column="42" />
+                <state relative-caret-position="157">
+                  <caret line="308" column="31" lean-forward="true" selection-start-line="308" selection-start-column="31" selection-end-line="308" selection-end-column="31" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file pinned="false" current-in-tab="true">
+          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/p1/HelperFunctions.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1339">
+                <state relative-caret-position="172">
                   <caret line="64" selection-start-line="64" selection-end-line="64" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/p1/DeleteHelpers.go">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1063">
+                  <caret line="90" column="22" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
                 </state>
               </provider>
             </entry>
@@ -40,8 +48,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/p1/testingMPT.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="88">
-                  <caret line="141" column="4" selection-start-line="141" selection-start-column="4" selection-end-line="141" selection-end-column="4" />
+                <state relative-caret-position="316">
+                  <caret line="226" selection-start-line="226" selection-end-line="226" />
                   <folding>
                     <element signature="e#12#95#0" expanded="true" />
                   </folding>
@@ -52,8 +60,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/main.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="330">
-                  <caret line="13" column="36" selection-start-line="13" selection-start-column="36" selection-end-line="13" selection-end-column="36" />
+                <state relative-caret-position="182">
+                  <caret line="17" selection-start-line="17" selection-end-line="17" />
                 </state>
               </provider>
             </entry>
@@ -63,10 +71,10 @@
       <split-second>
         <leaf>
           <file pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/p1/HelperFunctions.go">
+            <entry file="file://$PROJECT_DIR$/p1/DeleteHelpers.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="162">
-                  <caret line="129" column="35" selection-start-line="129" selection-start-column="35" selection-end-line="129" selection-end-column="35" />
+                <state relative-caret-position="793">
+                  <caret line="99" column="21" selection-start-line="99" selection-start-column="21" selection-end-line="99" selection-end-column="21" />
                 </state>
               </provider>
             </entry>
@@ -82,6 +90,11 @@
       </list>
     </option>
   </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>child</find>
+    </findStrings>
+  </component>
   <component name="GOROOT" path="/usr/local/go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -96,12 +109,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" />
-        <option value="$PROJECT_DIR$/p1/DeleteHelpers.go" />
         <option value="$PROJECT_DIR$/Tests/mpt_test.go" />
         <option value="$PROJECT_DIR$/main.go" />
-        <option value="$PROJECT_DIR$/p1/testingMPT.go" />
         <option value="$PROJECT_DIR$/p1/HelperFunctions.go" />
+        <option value="$PROJECT_DIR$/p1/testingMPT.go" />
+        <option value="$PROJECT_DIR$/p1/DeleteHelpers.go" />
+        <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" />
       </list>
     </option>
   </component>
@@ -216,7 +229,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.317757" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.15784009" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.337487" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -231,39 +244,11 @@
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Database" order="3" />
     </layout>
-    <layout-to-restore>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.09229829" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="Favorites" order="2" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.088265836" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.337487" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Database Changes" order="8" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
-      <window_info anchor="bottom" id="Terminal" order="10" />
-      <window_info anchor="bottom" id="Event Log" order="11" side_tool="true" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/p1/DeleteHelpers.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1366">
-          <caret line="86" column="22" selection-start-line="86" selection-start-column="22" selection-end-line="86" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Tests/mpt_test.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1120">
@@ -273,32 +258,39 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="13" column="36" selection-start-line="13" selection-start-column="36" selection-end-line="13" selection-end-column="36" />
+        <state relative-caret-position="182">
+          <caret line="17" selection-start-line="17" selection-end-line="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/p1/testingMPT.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="141" column="4" selection-start-line="141" selection-start-column="4" selection-end-line="141" selection-end-column="4" />
+        <state relative-caret-position="316">
+          <caret line="226" selection-start-line="226" selection-end-line="226" />
           <folding>
             <element signature="e#12#95#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie.go">
+    <entry file="file://$PROJECT_DIR$/p1/HelperFunctions.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2150">
-          <caret line="282" column="42" lean-forward="true" selection-start-line="282" selection-start-column="42" selection-end-line="282" selection-end-column="42" />
+        <state relative-caret-position="172">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/p1/HelperFunctions.go">
+    <entry file="file://$PROJECT_DIR$/p1/DeleteHelpers.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="129" column="35" selection-start-line="129" selection-start-column="35" selection-end-line="129" selection-end-column="35" />
+        <state relative-caret-position="1063">
+          <caret line="90" column="22" selection-start-line="90" selection-start-column="22" selection-end-line="90" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="157">
+          <caret line="308" column="31" lean-forward="true" selection-start-line="308" selection-start-column="31" selection-end-line="308" selection-end-column="31" />
         </state>
       </provider>
     </entry>

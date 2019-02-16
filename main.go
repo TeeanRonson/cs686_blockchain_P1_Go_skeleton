@@ -11,7 +11,13 @@ func main() {
 	//p1.TestCharles1InsertAndDelete()
 	//p1.TestCharles2InsertAndDelete()
 	//p1.TestCharles3InsertAndDelete()
-	p1.TestCharles4InsertAndDelete()
+	//p1.TestCharles4InsertAndDelete()
+	//p1.TestCharles5InsertAndDelete()
+	//p1.TestCharles6InsertAndDelete()
+	//p1.TestLeaf1()
+	p1.TestLeaf2()
+
+
 
 	//-------------------//-------------------//------------------//-------------------//-------------------
 	//fmt.Println("\nTest Cases")
