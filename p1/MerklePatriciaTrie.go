@@ -310,34 +310,41 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 					return currHash, currNode, err
 				}
 				if newHash == "" {
-					if branchItems(child) == 0 {
-						return "", currNode, nil
-					}
+					return "", currNode, nil
+				}
+				if newHash != nextHash {
 					delete(mpt.db, currHash)
-					nibbles = append(nibbles, 16)
-					newLeaf := createNode(2, [17]string{}, nibbles, child.branch_value[16])
-					mpt.addToMap(newLeaf)
-					return newLeaf.hash_node(), newLeaf, nil
-
-				} else if newHash != nextHash {
-					if isLeaf(child) {
-						delete(mpt.db, currHash)
-						extNibbles := Compact_decode(currNode.flag_value.encoded_prefix)
-						childNibbles := Compact_decode(child.flag_value.encoded_prefix)
-						newNibbles := append(mergeArrays(extNibbles, childNibbles), 16)
-						newLeaf := createNode(2, [17]string{}, newNibbles, child.flag_value.value)
-						delete(mpt.db, child.hash_node())
-						mpt.addToMap(newLeaf)
-						return newLeaf.hash_node(), newLeaf, nil
-					} else {
-						//merge myself with my child
-						delete(mpt.db, currHash)
-						childNibbles := Compact_decode(child.flag_value.encoded_prefix)
-						currNibbles := Compact_decode(currNode.flag_value.encoded_prefix)
-						newNibbles := mergeArrays(currNibbles, childNibbles)
-						newExtension := createNode(2, [17]string{}, newNibbles, child.flag_value.value)
-						mpt.addToMap(newExtension)
-						return newExtension.hash_node(), newExtension, nil
+					switch child.node_type {
+					//converting myself into a leaf node
+					//	delete(mpt.db, currHash)
+					//	nibbles = append(nibbles, 16)
+					//	newLeaf := createNode(2, [17]string{}, nibbles, child.branch_value[16])
+					//	mpt.addToMap(newLeaf)
+					//	return newLeaf.hash_node(), newLeaf, nil
+					case 1:
+						currNode.flag_value.value = newHash
+						mpt.addToMap(currNode)
+						return currNode.hash_node(), currNode, nil
+					case 2:
+						//if my child is a leaf, merge myself with my child
+						if isLeaf(child) {
+							childNibbles := Compact_decode(child.flag_value.encoded_prefix)
+							extNibbles := Compact_decode(currNode.flag_value.encoded_prefix)
+							newNibbles := append(mergeArrays(extNibbles, childNibbles), 16)
+							newLeaf := createNode(2, [17]string{}, newNibbles, child.flag_value.value)
+							delete(mpt.db, child.hash_node())
+							mpt.addToMap(newLeaf)
+							return newLeaf.hash_node(), newLeaf, nil
+						} else {
+							//merge myself with my child
+							delete(mpt.db, currHash)
+							childNibbles := Compact_decode(child.flag_value.encoded_prefix)
+							currNibbles := Compact_decode(currNode.flag_value.encoded_prefix)
+							newNibbles := mergeArrays(currNibbles, childNibbles)
+							newExtension := createNode(2, [17]string{}, newNibbles, child.flag_value.value)
+							mpt.addToMap(newExtension)
+							return newExtension.hash_node(), newExtension, nil
+						}
 					}
 				}
 			}

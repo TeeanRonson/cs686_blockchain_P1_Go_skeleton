@@ -113,8 +113,8 @@ func TestCharles2InsertAndDelete() {
     banana := mpt.Get("aa")
     fmt.Println("Get:", banana)
 
-    aaa := mpt.Get("aaa")
-    fmt.Println(aaa)
+    apple := mpt.Get("p")
+    fmt.Println(apple)
 }
 
 func TestCharles3InsertAndDelete() {
@@ -211,20 +211,22 @@ func TestLeaf1() {
 
 func TestLeaf2() {
 
-mpt := GetMPTrie()
-fmt.Println("Inserting values")
-mpt.Insert("a", "apple")
-mpt.Insert("b", "banana")
-mpt.Insert("ab", "new")
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("a", "apple")
+    mpt.Insert("b", "banana")
+    mpt.Insert("ab", "new")
 
-fmt.Println("\nDeleting values")
-//deleteC, err1 := mpt.Delete("c")
-//fmt.Println(deleteC, err1)
+    fmt.Println("\nDeleting values")
+    //deleteC, err1 := mpt.Delete("c")
+    //fmt.Println(deleteC, err1)
 
-getNew := mpt.Get("ab")
-fmt.Println("New:", getNew)
+    getNew := mpt.Get("ab")
+    fmt.Println("New:", getNew)
 
-deleteNew, err2 := mpt.Delete("ab")
-fmt.Println(deleteNew, err2)
+    deleteNew, err2 := mpt.Delete("ab")
+    fmt.Println(deleteNew, err2)
 
 }
+
+//func TestLeaf3
