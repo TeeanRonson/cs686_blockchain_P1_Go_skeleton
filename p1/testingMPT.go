@@ -55,7 +55,7 @@ func TestInsertAndGet() {
     ////fmt.Println("alphabet:", alphabet)
 }
 
-func TestCharles1InsertAndDelete() {
+func TestExt1() {
 
     mpt := GetMPTrie()
     fmt.Println("Inserting values")
@@ -64,25 +64,21 @@ func TestCharles1InsertAndDelete() {
     mpt.Insert("ap", "orange")
     mpt.Insert("b", "new")
 
-    fmt.Println("/nGet Values")
-    apple := mpt.Get("p")
-    fmt.Println("Get:", apple)
-    banana := mpt.Get("aa")
-    fmt.Println("Get:", banana)
-
     fmt.Println("\nDeleting values")
     deleteIncorrect, err1 := mpt.Delete("c")
     fmt.Println(deleteIncorrect, err1)
     deleteNew, err2 := mpt.Delete("b")
     fmt.Println(deleteNew, err2)
-    deleteOrange, err3 := mpt.Delete("ap")
-    fmt.Println(deleteOrange, err3)
-    deleteBanana, err4 := mpt.Delete("aa")
-    fmt.Println(deleteBanana, err4)
-    deleteApple, err5 := mpt.Delete("p")
-    fmt.Println(deleteApple, err5)
+    //deleteOrange, err3 := mpt.Delete("ap")
+    //fmt.Println(deleteOrange, err3)
+    //deleteBanana, err4 := mpt.Delete("aa")
+    //fmt.Println(deleteBanana, err4)
+    //deleteApple, err5 := mpt.Delete("p")
+    //fmt.Println(deleteApple, err5)
 
     fmt.Println("\nGet Values")
+    banana := mpt.Get("aa")
+    fmt.Println("Get:", banana)
     orange := mpt.Get("ap")
     fmt.Println("Get:", orange)
     newWord := mpt.Get("b")
@@ -96,7 +92,7 @@ func TestCharles1InsertAndDelete() {
     //fmt.Println(mpt.db["HashStart_3c255775632b05b1194107f9ac8b40f9d498720c70536a3f90be2686b31d1b67_HashEnd"])
 }
 
-func TestCharles2InsertAndDelete() {
+func TestExt2() {
     mpt := GetMPTrie()
     fmt.Println("Inserting values")
     mpt.Insert("p", "apple")
@@ -111,13 +107,38 @@ func TestCharles2InsertAndDelete() {
     fmt.Println(deleteNew, err2)
 
     banana := mpt.Get("aa")
-    fmt.Println("Get:", banana)
+    fmt.Println(banana)
 
     apple := mpt.Get("p")
     fmt.Println(apple)
 }
 
-func TestCharles3InsertAndDelete() {
+
+
+
+func TestExt3() {
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("aaa", "apple")
+    mpt.Insert("aap", "banana")
+    mpt.Insert("bb", "right leaf")
+    mpt.Insert("aa", "new")
+
+    fmt.Println("\nDeleting values")
+    deleteNew, err1 := mpt.Delete("aa")
+    fmt.Println(deleteNew, err1)
+
+    banana := mpt.Get("aap")
+    fmt.Println("Banana:", banana)
+
+    getApple := mpt.Get("aaa")
+    fmt.Println("Apple:", getApple)
+
+
+}
+
+
+func TestExt4() {
     mpt := GetMPTrie()
     fmt.Println("Inserting values")
     mpt.Insert("p", "apple")
@@ -136,7 +157,7 @@ func TestCharles3InsertAndDelete() {
     fmt.Println(getNew)
 }
 
-func TestCharles4InsertAndDelete() {
+func TestExt7() {
 
     mpt := GetMPTrie()
     fmt.Println("Inserting values")
@@ -155,12 +176,13 @@ func TestCharles4InsertAndDelete() {
     fmt.Println("Banana:", banana)
 }
 
-func TestCharles5InsertAndDelete() {
+func TestExt8() {
 
     mpt := GetMPTrie()
     fmt.Println("Inserting values")
-    mpt.Insert("aaaa", "apple")
-    mpt.Insert("aaap", "banana")
+    mpt.Insert("p", "apple")
+    mpt.Insert("aaaa", "banana")
+    mpt.Insert("aaap", "orange")
     mpt.Insert("a", "new")
 
     fmt.Println("\nDeleting values")
@@ -229,4 +251,242 @@ func TestLeaf2() {
 
 }
 
-//func TestLeaf3
+func TestLeaf3() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("a", "apple")
+    mpt.Insert("p", "banana")
+    mpt.Insert("b", "new")
+
+    deleteNew, err2 := mpt.Delete("b")
+    fmt.Println(deleteNew, err2)
+
+    getNew := mpt.Get("b")
+    fmt.Println("New:", getNew)
+
+    getApple := mpt.Get("a")
+    fmt.Println("Apple:", getApple)
+
+    getBanana := mpt.Get("p")
+    fmt.Println("Banana", getBanana)
+
+}
+
+func TestLeaf4() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("a", "apple")
+    mpt.Insert("p", "banana")
+    mpt.Insert("bc", "new")
+
+    deleteNew, err2 := mpt.Delete("bc")
+    fmt.Println(deleteNew, err2)
+
+    getNew := mpt.Get("bc")
+    fmt.Println("New:", getNew)
+
+    getApple := mpt.Get("a")
+    fmt.Println("Apple:", getApple)
+
+    getBanana := mpt.Get("p")
+    fmt.Println("Banana", getBanana)
+
+}
+
+func TestLeaf5() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("bab", "apple")
+    mpt.Insert("aa", "banana")
+    mpt.Insert("b", "new")
+
+    deleteNew, err2 := mpt.Delete("b")
+    fmt.Println(deleteNew, err2)
+
+    getNew := mpt.Get("bc")
+    fmt.Println("New:", getNew)
+}
+
+func TestLeaf6() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("aab", "apple")
+    mpt.Insert("app", "banana")
+    mpt.Insert("ac", "new")
+
+    getNew := mpt.Get("ac")
+    fmt.Println("New:", getNew)
+
+    deleteNew, err2 := mpt.Delete("ac")
+    fmt.Println(deleteNew, err2)
+
+    getNew2 := mpt.Get("ac")
+    fmt.Println("New:", getNew2)
+}
+
+func TestLeaf7() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("aab", "apple")
+    mpt.Insert("app", "banana")
+    mpt.Insert("ace", "new")
+
+    getNew := mpt.Get("ace")
+    fmt.Println("New:", getNew)
+
+    deleteNew, err2 := mpt.Delete("ace")
+    fmt.Println(deleteNew, err2)
+
+    getNew2 := mpt.Get("ace")
+    fmt.Println("New:", getNew2)
+}
+
+func TestLeaf8() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("p", "banana")
+    mpt.Insert("a", "apple")
+    mpt.Insert("a", "new")
+
+    a := mpt.Get("a")
+    fmt.Println("a:", a)
+
+    deleteNew, err2 := mpt.Delete("ace")
+    fmt.Println(deleteNew, err2)
+
+}
+
+func TestLeaf9() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("a", "apple")
+    mpt.Insert("p", "banana")
+    mpt.Insert("abc", "new")
+
+    apple := mpt.Get("a")
+    fmt.Println("apple:", apple)
+
+    banana := mpt.Get("p")
+    fmt.Println("banana:", banana)
+
+    getNew := mpt.Get("abc")
+    fmt.Println("abc:", getNew)
+
+    deleteNew, err2 := mpt.Delete("abc")
+    fmt.Println(deleteNew, err2)
+
+    getNew2 := mpt.Get("abc")
+    fmt.Println("abc:", getNew2)
+}
+
+func TestLeaf10() {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("a", "apple")
+    mpt.Insert("b", "new")
+
+    apple := mpt.Get("a")
+    fmt.Println("apple:", apple)
+
+    getNew := mpt.Get("b")
+    fmt.Println("b:", getNew)
+
+    deleteNew, err2 := mpt.Delete("b")
+    fmt.Println(deleteNew, err2)
+
+}
+func TestLeaf11() {
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("a", "apple")
+    mpt.Insert("bc", "new")
+
+    deleteDummy, err1 := mpt.Delete("c")
+    fmt.Println(deleteDummy, err1)
+
+    deleteNew, err2 := mpt.Delete("bc")
+    fmt.Println(deleteNew, err2)
+
+}
+
+func TestLeaf12() {
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("ap", "apple")
+    mpt.Insert("b", "new")
+
+    deleteDummy, err1 := mpt.Delete("c")
+    fmt.Println(deleteDummy, err1)
+
+    deleteNew, err2 := mpt.Delete("b")
+    fmt.Println(deleteNew, err2)
+
+}
+
+func TestBranch1() {
+
+    mpt := GetMPTrie()
+    mpt.Insert("aa", "apple")
+    mpt.Insert("ap", "banana")
+    mpt.Insert("a", "new")
+
+    deleteNew, err2 := mpt.Delete("a")
+    fmt.Println(deleteNew, err2)
+}
+
+func TestBranch2() {
+
+    mpt := GetMPTrie()
+    mpt.Insert("a", "old")
+    mpt.Insert("aa", "apple")
+    mpt.Insert("ap", "banana")
+    mpt.Insert("a", "new")
+
+    deleteNew, err2 := mpt.Delete("a")
+    fmt.Println(deleteNew, err2)
+
+    getNew := mpt.Get("aa")
+    fmt.Println("a:", getNew)
+
+}
+
+func TestBranch3() {
+    mpt := GetMPTrie()
+    mpt.Insert("a", "apple")
+    mpt.Insert("b", "banana")
+    mpt.Insert("c", "new")
+
+
+    deleteNew, err2 := mpt.Delete("cc")
+    fmt.Println(deleteNew, err2)
+
+    getNew := mpt.Get("b")
+    fmt.Println("c:", getNew)
+}
+
+func TestBranch4() {
+    mpt := GetMPTrie()
+    mpt.Insert("aa", "apple")
+    mpt.Insert("ap", "banana")
+    mpt.Insert("a", "old")
+    mpt.Insert("aA", "new")
+
+    deleteNew, err2 := mpt.Delete("aA")
+    fmt.Println(deleteNew, err2)
+
+    getNew := mpt.Get("a")
+    fmt.Println("c:", getNew)
+
+}
+
+
+
+

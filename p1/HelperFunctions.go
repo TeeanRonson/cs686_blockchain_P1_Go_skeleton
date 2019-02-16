@@ -180,11 +180,14 @@ find the matched portion of nibbles & encodedKey
  func (mpt *MerklePatriciaTrie) breakLeafSingleExcess(currNode Node, match uint8,  nibbles []uint8, encodedKey []uint8, newValue string, excessPath bool) string{
      //fmt.Println(1)
      delete(mpt.db, currNode.hash_node())
-     pathway := nibbles
-     index := nibbles[match]
+     var pathway []uint8
+     var index uint8
      if excessPath {
          pathway = encodedKey
          index = encodedKey[match]
+     } else {
+         pathway = nibbles
+         index = nibbles[match]
      }
      pathway = append(pathway, 16)
      newLeaf := createNode(2, [17]string{}, pathway[match+1:], newValue)

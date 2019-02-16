@@ -1,7 +1,5 @@
 package main
 
-import "github.com/teeanronson/cs686_blockchain_P1_Go_skeleton/p1"
-
 func main() {
 
 	//fmt.Println("Testing the Insert method")
@@ -9,15 +7,27 @@ func main() {
 	//p1.TestInsertAndGet()
 
 	//p1.TestInsertAndGet()
-	//p1.TestCharles1InsertAndDelete()
-	p1.TestCharles2InsertAndDelete()
-	//p1.TestCharles3InsertAndDelete()
-	//p1.TestCharles4InsertAndDelete()
-	//p1.TestCharles5InsertAndDelete()
-	//p1.TestCharles6InsertAndDelete()
+	//p1.TestExt1()
+	//p1.TestExt2()
+	//p1.TestExt3()
+	//p1.TestExt4()
+
 	//p1.TestLeaf1()
 	//p1.TestLeaf2()
-
+	//p1.TestLeaf3()
+	//p1.TestLeaf4()
+	//p1.TestLeaf5()
+	//p1.TestLeaf6()
+	//p1.TestLeaf7()
+	//p1.TestLeaf8()
+	//p1.TestLeaf9()
+	//p1.TestLeaf10()
+	//p1.TestLeaf11()
+	//p1.TestLeaf12()
+	//p1.TestBranch1()
+	//p1.TestBranch2()
+	//p1.TestBranch3()
+	//p1.TestBranch4()
 
 
 	//-------------------//-------------------//------------------//-------------------//-------------------

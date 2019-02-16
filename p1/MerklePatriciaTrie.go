@@ -142,11 +142,12 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 		}
 
 		nextHash := currNode.branch_value[encodedKey[0]]
-		if  nextHash == "" {
+		if	nextHash == "" {
 			delete(mpt.db, currHash)
 			encodedKey = append(encodedKey, 16)
 			newLeaf := createNode(2, [17]string{}, encodedKey[1:], newValue)
 			mpt.addLeavesToBranch(newLeaf, &currNode, encodedKey[0])
+			mpt.addToMap(newLeaf)
 			mpt.addToMap(currNode)
 			return currNode.hash_node()
 		} else {
@@ -191,7 +192,14 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 		} else { //is extension
 			fmt.Println("InExtension")
 			if reflect.DeepEqual(nibbles, encodedKey) { //exact match
-				return mpt.insertHelp(currHash, currNode.flag_value.value, encodedKey[match:], newValue)
+				nextHash := currNode.flag_value.value
+				newHash := mpt.insertHelp(currHash, nextHash, encodedKey[match:], newValue)
+				if newHash != nextHash {
+					delete(mpt.db, currHash)
+					currNode.flag_value.value = newHash
+					mpt.addToMap(currNode)
+					return currNode.hash_node()
+				}
 			} else if match == 0 { //no match
 				fmt.Println("No match")
 				return mpt.breakNodeNoMatch(currNode, nibbles, encodedKey, newValue, false)
@@ -202,8 +210,9 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 					return mpt.breakNodeDoubleExcess(currNode, match, nibbles, encodedKey, newValue, false)
 				} else if len(encodedKey[match:]) != 0 && len(nibbles[match:]) == 0 {
 					fmt.Println("Case 2")
-					newHash = mpt.insertHelp(currHash, currNode.flag_value.value, encodedKey[match:], newValue)
-					if newHash != currNode.flag_value.value {
+					nextHash := currNode.flag_value.value
+					newHash = mpt.insertHelp(currHash, nextHash, encodedKey[match:], newValue)
+					if newHash != nextHash {
 						delete(mpt.db, currHash)
 						currNode.flag_value.value = newHash
 						mpt.addToMap(currNode)
@@ -337,6 +346,7 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 							return newLeaf.hash_node(), newLeaf, nil
 						} else {
 							//merge myself with my child
+							fmt.Println("Forbidden lands")
 							delete(mpt.db, currHash)
 							childNibbles := Compact_decode(child.flag_value.encoded_prefix)
 							currNibbles := Compact_decode(currNode.flag_value.encoded_prefix)
