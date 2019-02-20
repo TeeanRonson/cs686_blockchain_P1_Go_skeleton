@@ -110,10 +110,6 @@ Takes a key as the argument, traverses down the MPT to find the value
 if the key doesnt exist, return an empty string
  */
 func (mpt *MerklePatriciaTrie) Get(key string) string {
-	//Create a path array
-	//Convert the key string into Hexcode
-	//Add each item of the Hexcode into the Path array
-	//pass MPT Tree and Key into the Helper method
 	path := EncodeToHex(key)
 	fmt.Println("\nNew Get\nPath:", path)
 	return mpt.GetHelper1(path)
