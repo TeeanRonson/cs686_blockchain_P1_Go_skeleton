@@ -1,22 +1,5 @@
 package p1
 
-/**
-If tree is empty
-Insert a leaf node: if leaf node then we need to insert [6, 4, 6, 15, 16] into compact encode
-if we see a leaf
-
-When we create a new node, remove the old node from the DB
-
-when comparing nibbles with paths
-- common path
-- rest of path
-- rest of nibble
-
-insert function : return the hashvalue of the current Node up
-
-
- */
-
 import (
 	"encoding/hex"
 	"fmt"
@@ -28,14 +11,8 @@ import (
 type Flag_value struct {
 	encoded_prefix []uint8
 	value string
-
 }
 
-/**
-The variable "branch_value" is used only when it's a Branch Node
-Variable "flag_value" is used only when it's an Ext or Leaf Node.
-You don't have to use "branch_value" if it's an Ext or Leaf Node
- */
 type Node struct {
 	node_type int // 0: Null, 1: Branch, 2: Ext or Leaf
 	branch_value [17]string
@@ -44,30 +21,17 @@ type Node struct {
 
 type MerklePatriciaTrie struct {
 	db map[string]Node
-	root string //root hash
-}
-
-func (mpt *MerklePatriciaTrie) Test() {
-
-	flag := Flag_value{[]uint8{1, 2}, "hello"}
-	test1 := Node{1, [17]string{}, flag}
-	fmt.Println(len(test1.branch_value))
-	test1.branch_value[1] = "Hi"
-	fmt.Println(len(test1.branch_value))
-
-
+	root string
 }
 
 func (mpt *MerklePatriciaTrie) GetHelper2(node string, path []uint8, position int) string {
 
-	//Do some hashing, find the path all the way down and return the value
 	currNode := mpt.db[node]
 	nodeType := currNode.node_type
 	switch nodeType {
 	case 0:
 		return ""
 	case 1:
-		//fmt.Println("Branch")
 		if len(path) == 0 {
 			return currNode.branch_value[16]
 		}
@@ -75,7 +39,6 @@ func (mpt *MerklePatriciaTrie) GetHelper2(node string, path []uint8, position in
 		return mpt.GetHelper2(nextHash, path[1:], 0)
 	case 2:
 		isLeaf := isLeaf(currNode)
-		//fmt.Println(isLeaf)
 		nibbles := Compact_decode(currNode.flag_value.encoded_prefix)
 		if reflect.DeepEqual(nibbles, path) && isLeaf {
 			return currNode.flag_value.value
@@ -99,9 +62,7 @@ func (mpt *MerklePatriciaTrie) GetHelper1(path []uint8) string {
 		fmt.Println("Nothing")
 		return ""
 	}
-
 	value := mpt.GetHelper2(mpt.root, path, 0)
-
 	return value
 }
 
