@@ -1,7 +1,5 @@
 package p1
 
-import "fmt"
-
 /**
 Retrieves a new MPT
  */
@@ -148,9 +146,6 @@ find the matched portion of nibbles & encodedKey
      if !isLeaf {
          nibbles = nibbles[:len(nibbles)-1]
      }
-     fmt.Println(nibbles[match+1:])
-     fmt.Println(encodedKey[match+1:], newValue)
-
      newLeaf1 := createNode(2, [17]string{}, nibbles[match + 1:], currNode.flag_value.value)
      newLeaf2 := createNode(2, [17]string{}, encodedKey[match + 1:], newValue)
      newBranch := createNode(1, [17]string{}, []uint8{}, "") //create a branch node
@@ -178,7 +173,6 @@ find the matched portion of nibbles & encodedKey
  leafNode: newLeaf node placed in the respective branch node array
   */
  func (mpt *MerklePatriciaTrie) breakLeafSingleExcess(currNode Node, match uint8,  nibbles []uint8, encodedKey []uint8, newValue string, excessPath bool) string{
-     //fmt.Println(1)
      delete(mpt.db, currNode.hash_node())
      var pathway []uint8
      var index uint8
@@ -217,11 +211,7 @@ find the matched portion of nibbles & encodedKey
      mpt.addToMap(lowerExt)
      mpt.addToMap(newBranch)
      mpt.addToMap(upperExt)
-     fmt.Println(1)
-     fmt.Println(upperExt.hash_node())
      return upperExt.hash_node()
-
-
  }
 
  /**

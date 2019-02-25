@@ -76,21 +76,21 @@ func (mpt *MerklePatriciaTrie) Get(key string) string {
 	return mpt.GetHelper1(path)
 }
 
-/**
-Should we always append 16 to a leaf node?
 
+/**
+Insert Helper method
  */
 func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encodedKey []uint8, newValue string) (newHash string) {
 
 	currNode := mpt.db[currHash]
 	nodeType := currNode.node_type
 	switch nodeType {
-	case 0: //null
+	case 0:
 		encodedKey = append(encodedKey, 16)
 		leaf := createNode(2, [17]string{}, encodedKey, newValue)
 		mpt.addToMap(leaf)
 		return leaf.hash_node()
-	case 1: //branch
+	case 1:
 		if len(encodedKey) == 0 {
 			delete(mpt.db, currHash)
 			currNode.branch_value[16] = newValue
@@ -108,12 +108,10 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 			mpt.addToMap(currNode)
 			return currNode.hash_node()
 		} else {
-			//fmt.Println("Into Branch")
 			newHash := mpt.insertHelp(currHash, nextHash, encodedKey[1:], newValue)
 			if newHash != nextHash {
 				delete(mpt.db, currHash)
 				currNode.branch_value[encodedKey[0]] = newHash
-				//fmt.Println("Checking currNode:", currNode)
 				mpt.addToMap(currNode)
 				return currNode.hash_node()
 			}
@@ -123,31 +121,23 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 		nibbles := Compact_decode(currNode.flag_value.encoded_prefix)
 		match := findMatch(0, nibbles, encodedKey)
 		if isLeaf(currNode) {
-			fmt.Println("InLeaf")
-			if reflect.DeepEqual(encodedKey, nibbles) { //full match, replace value
-				fmt.Println("Full Match")
+			if reflect.DeepEqual(encodedKey, nibbles) { //exact match
 				delete(mpt.db, currHash)
 				currNode.flag_value.value = newValue
 				mpt.addToMap(currNode)
 				return currNode.hash_node()
 			} else if match == 0 { //no match
-				fmt.Println("No Match")
 				return mpt.breakNodeNoMatch(currNode, nibbles, encodedKey, newValue, true)
 			} else if match > 0 && int(match) <= len(nibbles) { //partial matches - 3 types
-				fmt.Println("Partial Match")
 				if len(encodedKey[match:]) != 0 && len(nibbles[match:]) != 0 { //excess path and excess nibbles
-					fmt.Println("Case 1")
 					return mpt.breakNodeDoubleExcess(currNode, match, nibbles, encodedKey, newValue, true)
 				} else if len(encodedKey[match:]) != 0 && len(nibbles[match:]) == 0 { //partial match with excess path only
-					fmt.Println("Case 2")
 					return mpt.breakLeafSingleExcess(currNode, match, nibbles, encodedKey, newValue, true)
 				} else if len(encodedKey[match:]) == 0 && len(nibbles[match:]) != 0 { //partial match with excess nibbles
-					fmt.Println("Case 3")
 					return mpt.breakLeafSingleExcess(currNode, match, nibbles, encodedKey, newValue, false)
 				}
 			}
-		} else { //is extension
-			fmt.Println("InExtension")
+		} else { //is Extension
 			if reflect.DeepEqual(nibbles, encodedKey) { //exact match
 				nextHash := currNode.flag_value.value
 				newHash := mpt.insertHelp(currHash, nextHash, encodedKey[match:], newValue)
@@ -158,15 +148,11 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 					return currNode.hash_node()
 				}
 			} else if match == 0 { //no match
-				fmt.Println("No match")
 				return mpt.breakNodeNoMatch(currNode, nibbles, encodedKey, newValue, false)
 			} else if match > 0 && int(match) <= len(nibbles) {
-				fmt.Println("Partial Match")
 				if len(encodedKey[match:]) != 0 && len(nibbles[match:]) != 0 {
-					fmt.Println("Case 1")
 					return mpt.breakNodeDoubleExcess(currNode, match, nibbles, encodedKey, newValue, false)
 				} else if len(encodedKey[match:]) != 0 && len(nibbles[match:]) == 0 {
-					fmt.Println("Case 2")
 					nextHash := currNode.flag_value.value
 					newHash = mpt.insertHelp(currHash, nextHash, encodedKey[match:], newValue)
 					if newHash != nextHash {
@@ -176,7 +162,6 @@ func (mpt *MerklePatriciaTrie) insertHelp(parent string, currHash string, encode
 						return currNode.hash_node()
 					}
 				} else if len(encodedKey[match:]) == 0 && len(nibbles[match:]) != 0 {
-					fmt.Println("Case 3")
 					return mpt.breakExtSingleExcess(currNode, match, nibbles, encodedKey, newValue, false)
 				}
 			}
@@ -206,6 +191,8 @@ func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 }
 
 /**
+Delete helper method
+
 If we find the path, delete the value, make new adjustments and send up a new hashvalue with nil error
 If we dont find the path, then we send up the same hashvalue with an error value
  */
@@ -221,7 +208,6 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 			delete(mpt.db, currHash)
 			currNode.branch_value[16] = ""
 			branchCount := branchItems(currNode)
-			//check the branch
 			return mpt.checkBranch(branchCount, currNode)
 
 		} else {
@@ -231,17 +217,14 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 			} else { //recurse down
 				fmt.Println("2 & 3", path)
 				newHash, child, err := mpt.deleteHelper(currHash, nextHash, path[1:])
-				//If there is an error, that means we couldn't find the path
 				if err != nil || newHash == nextHash {
 					return currHash, currNode, err
 				} else {
-					//no error, we found and changed something
 					if newHash != nextHash {
 						//update at the newHash
 						fmt.Println("Child:", child)
 						delete(mpt.db, currHash)
 						currNode.branch_value[path[0]] = newHash
-
 						branchCount := branchItems(currNode)
 						return mpt.checkBranch(branchCount, currNode)
 					}
@@ -252,16 +235,13 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 		nibbles := Compact_decode(currNode.flag_value.encoded_prefix)
 		match := findMatch(0, nibbles, path)
 		if isLeaf(currNode) {
-			fmt.Println("Leaf")
 			if reflect.DeepEqual(nibbles, path) { //exact match
-			fmt.Println("Exact match")
 				delete(mpt.db, currHash)
 				return "", currNode, nil
 			} else if len(path[match:]) > 0 || match == 0 {
 				return currHash, currNode, errors.New("Path Not Found")
 			}
-		} else {
-			//if extension
+		} else { //if extension
 			fmt.Println("Extension")
 			//If there are still more nibbles, return error
 			if len(path[match:]) == 0 && len(nibbles[match:]) != 0 {
@@ -269,7 +249,6 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 			} else if reflect.DeepEqual(nibbles, path) || (len(nibbles[match:]) == 0 && len(path[match:]) != 0) {
 				//we have an exact match or we have some extra path but no more nibbles
 				//so we recurse further down
-				fmt.Println("1", path)
 				nextHash := currNode.flag_value.value
 				newHash, child, err := mpt.deleteHelper(currHash, nextHash, path[match:])
 				if err != nil {
@@ -303,6 +282,7 @@ func (mpt *MerklePatriciaTrie) deleteHelper(parent string, currHash string, path
 							return newLeaf.hash_node(), newLeaf, nil
 						} else {
 							//merge myself with my child
+							//We might never need to get in here
 							fmt.Println("Forbidden lands")
 							delete(mpt.db, currHash)
 							childNibbles := Compact_decode(child.flag_value.encoded_prefix)
@@ -325,10 +305,10 @@ If the key exists, delete the corresponding value and re-balance the Trie, if ne
 if the key doesn't exist, return 'path_not_found'
  */
 func (mpt *MerklePatriciaTrie) Delete(key string) (string, error) {
+	fmt.Println("\nNewDeletion")
 	if len(key) == 0 {
 		return "", errors.New("No Input key")
 	}
-	fmt.Println("\nNewDeletion")
 	encodedKey := EncodeToHex(key)
 	fmt.Println("Delete Path:", encodedKey)
 	newHash, child, err := mpt.deleteHelper("", mpt.root, encodedKey)
@@ -354,25 +334,20 @@ makes sure the length is even, and converts it into an array of ASCII numbers as
 //If the last value is 16, it is a leaf node
  */
 func Compact_encode(hex_array []uint8) []uint8 {
-	//fmt.Println("Encoding........")
-	//fmt.Println(hex_array)
 	term := 0
 	if hex_array[len(hex_array)-1] == 16 {
 		hex_array = hex_array[0: len(hex_array) - 1]
 		term = 1
 	}
-
 	flags := make([]uint8, 0)
 	oddlen := len(hex_array) % 2
 	flags = append(flags, uint8(2*term+oddlen))
-	//fmt.Println(flags)
 	if oddlen == 1 {
 		hex_array = append(flags, hex_array...)
 	} else {
 		flags = append(flags, 0)
 		hex_array = append(flags, hex_array...)
 	}
-	//fmt.Println("hex:", hex_array)
 	result := make([]uint8, 0)
 	for i:= 0; i < len(hex_array); i += 2 {
 		result = append(result, 16*hex_array[i]+hex_array[i+1])
@@ -381,20 +356,12 @@ func Compact_encode(hex_array []uint8) []uint8 {
 }
 
 
-// If Leaf, ignore 16 at the end
 /*
 Reverse the compact_encode function
  */
 func Compact_decode(encoded_arr []uint8) []uint8 {
-
 	unpack := ConvertToHex(encoded_arr)
-	//if unpack[0] < 2 { //Extension node, remove 16
-	//	unpack = unpack[:len(unpack)-1]
-	//}
 	checkPrefix := 2 - unpack[0]&1
-	//if unpack[len(unpack)-1] == 16 {
-	//	return unpack[checkPrefix:len(unpack)-1]
-	//}
 	return unpack[checkPrefix:]
 }
 

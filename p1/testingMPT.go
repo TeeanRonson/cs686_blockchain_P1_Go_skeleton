@@ -31,7 +31,7 @@ func TestInsertAndGet() {
     fmt.Println("King:", king)
     fmt.Println("alphabet:", alphabet)
 
-    fmt.Println("------------------------------\n")
+    //fmt.Println("------------------------------\n")
 
     //result, err := mpt.Delete("p")
     //fmt.Println(result, err)

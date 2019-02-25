@@ -1,7 +1,5 @@
 package p1
 
-import "fmt"
-
 /**
 Checks the number if items in the branch node
  */
@@ -70,11 +68,8 @@ Finds the non empty space in branch node
       if branchCount == 0 {
           return "", currNode, nil
       } else if branchCount == 1 {
-          //if the position is at position 16
-          //then we return "", currNode, nil
           currNibble := []uint8{findNonEmptySpace(currNode)}
           if currNibble[0] == 16 {
-              fmt.Println("return this leaf")
               newLeaf := createNode(2, [17]string{}, []uint8{16}, currNode.branch_value[currNibble[0]])
               mpt.addToMap(newLeaf)
               return newLeaf.hash_node(), newLeaf, nil
@@ -97,7 +92,6 @@ Finds the non empty space in branch node
               }
           }
       }
-      fmt.Println(123)
       mpt.addToMap(currNode)
       return currNode.hash_node(), currNode, nil
   }
