@@ -1,4 +1,4 @@
-package p1
+package MerklePatriciaTrie
 
 import ("fmt"
 )
@@ -30,29 +30,6 @@ func TestInsertAndGet() {
     fmt.Println("Candle:", candle)
     fmt.Println("King:", king)
     fmt.Println("alphabet:", alphabet)
-
-    //fmt.Println("------------------------------\n")
-
-    //result, err := mpt.Delete("p")
-    //fmt.Println(result, err)
-    //deleteBanana, err := mpt.Delete("aaaaa")
-    //fmt.Println(deleteBanana, err)
-    //
-    //fmt.Println("\nPost Get test")
-    //appleDelete := mpt.Get("p")
-    //bananaDelete := mpt.Get("aaaaa")
-    //orangeDelete := mpt.Get("aaaap")
-    ////newWord := mpt.Get("aa")
-    ////candle := mpt.Get("aaaab")
-    ////king := mpt.Get("king")
-    ////alphabet := mpt.Get("abc")
-    //fmt.Println("Apple:", appleDelete)
-    //fmt.Println("Banana:", bananaDelete)
-    //fmt.Println("Orange:", orangeDelete)
-    ////fmt.Println("New:", newWord)
-    ////fmt.Println("Candle:", candle)
-    ////fmt.Println("King:", king)
-    ////fmt.Println("alphabet:", alphabet)
 }
 
 func TestExt1() {
