@@ -2,7 +2,6 @@ package p2
 
 import (
     "encoding/json"
-    "fmt"
     "reflect"
 )
 
@@ -15,10 +14,11 @@ type BlockChain struct {
     Chain map[int32][]Block
 }
 
-type jsonAsString struct {
-    value string
-}
+func NewBlockChain() BlockChain {
 
+    chain := make(map[int32][]Block)
+    return BlockChain{0, chain}
+}
 /**
 This function takes a height as the argument,
 returns the list of blocks stored in that height or None if the height doesn't exist.
@@ -76,22 +76,23 @@ It takes a blockchain JSON string as input,
 decodes the JSON string back to a list of block JSON strings,
 decodes each block JSON string back to a block instance, and inserts every block into the blockchain.
  */
-func (bc *BlockChain) DecodeFromJson(jsonString string) {
+func DecodeFromJson(jsonString string) BlockChain {
 
     //convert the given jsonString to a list of blockJson strings
     //convert each blockJson string into a block instance
     //insert all blocks into the blockchain
-    //newBlockChain := BlockChain{}
+    newBlockChain := NewBlockChain()
     myList := make([]BlockJson, 0)
     if err := json.Unmarshal([]byte(jsonString), &myList); err != nil {
         panic(err)
     }
 
-    fmt.Println(myList)
+    //fmt.Println(myList)
     height := int32(len(myList))
 
     for _, item := range myList {
         createBlock := decodeFromJson2(item)
-        bc.Chain[height] = append(bc.Chain[height], createBlock)
+        newBlockChain.Chain[height] = append(newBlockChain.Chain[height], createBlock)
     }
+    return newBlockChain
 }

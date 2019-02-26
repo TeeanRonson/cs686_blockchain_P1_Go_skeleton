@@ -181,7 +181,7 @@ func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 		fmt.Println("Nil Key and Value given as input")
 		return
 	}
-	fmt.Println("\nNewInsertion")
+	//fmt.Println("\nNewInsertion")
 	//Insert into extra database
 	mpt.Inputs[key] = new_value
 
@@ -190,8 +190,8 @@ func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 	newHash := mpt.insertHelp("", mpt.Root, encodedKey, new_value)
 	if newHash != mpt.Root {
 		mpt.Root = newHash
-		fmt.Println("Newhash:", newHash)
-		fmt.Println("DB final:", mpt.db)
+		//fmt.Println("Newhash:", newHash)
+		//fmt.Println("DB final:", mpt.db)
 	}
 }
 
