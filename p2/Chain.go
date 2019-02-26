@@ -1,4 +1,4 @@
-package Blockchain
+package p2
 
 type Blockchain struct {
     Length int32

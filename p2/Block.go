@@ -1,19 +1,20 @@
-package Blockchain
+package p2
 
 import (
     "bytes"
-    "encoding/binary"
+    "encoding/gob"
     "encoding/hex"
     "encoding/json"
     "fmt"
-    "github.com/teeanronson/cs686_blockchain_P1_Go_skeleton/p1/MerklePatriciaTrie"
+    "github.com/teeanronson/cs686_blockchain_P1_Go_skeleton/p1"
     "golang.org/x/crypto/sha3"
+    "log"
     "time"
 )
 
 type Block struct {
     header Header
-    mpt MerklePatriciaTrie.MerklePatriciaTrie
+    mpt p1.MerklePatriciaTrie
 }
 
 type Header struct {
@@ -34,39 +35,53 @@ type BlockJson struct {
 }
 
 
+func getBytes(value p1.MerklePatriciaTrie) []byte {
+
+    var network bytes.Buffer        // Stand-in for a network connection
+    enc := gob.NewEncoder(&network) // Will write to network.
+    //dec := gob.NewDecoder(&network) // Will read from network.
+    // Encode (send) the value.
+    err := enc.Encode(value)
+    if err != nil {
+        fmt.Println("error")
+        log.Fatal("encode error:", err)
+    }
+
+    // HERE ARE YOUR BYTES!!!!
+    return network.Bytes()
+}
 /**
 This function takes arguments(such as height, parentHash, and value of MPT type) and forms a block.
 This is a method of the block struct.
  */
-func (b *Block) NewBlock(height int32, parentHash string, value MerklePatriciaTrie.MerklePatriciaTrie) *Block {
+func (b *Block) NewBlock(height int32, parentHash string, value p1.MerklePatriciaTrie) {
 
     var header Header
-    buf := &bytes.Buffer{}
-    err := binary.Write(buf, binary.BigEndian, value)
-    if err != nil {
-        panic(err)
-    }
-    //fmt.Println(buf.Bytes())
+    //mptAsBytes := getBytes(value)
+    mptAsBytes := value.GetRoot()
+    fmt.Println("bytes length", len(mptAsBytes))
 
-    header.Height = 1
-    header.Size = int32(len(buf.Bytes()))
+    header.Height = height
     header.Timestamp = int64(time.Now().Unix())
     header.ParentHash = parentHash
+    header.Size = int32(len(mptAsBytes))
 
-    hash_str := string(header.Height) + string(header.Timestamp) + header.ParentHash + value.GetRoot() + string(header.Size)
-    sum := sha3.Sum256([]byte(hash_str))
+    hashString := string(header.Height) + string(header.Timestamp) + header.ParentHash + value.GetRoot() + string(header.Size)
+    sum := sha3.Sum256([]byte(hashString))
     header.Hash = hex.EncodeToString(sum[:])
 
-    return &Block{header, b.mpt}
-
+    b.header = header
+    b.mpt = value
 }
 
 /**
 Reconstruct MPT from Map input
  */
-func createTrie(values map[string]string) MerklePatriciaTrie.MerklePatriciaTrie {
-
-    mpt := MerklePatriciaTrie.GetMPTrie()
+func NewTrie(values map[string]string) p1.MerklePatriciaTrie {
+    //
+    //db := make(map[string]p1.Node)
+    //root := "root"
+    mpt := p1.GetMPTrie()
 
     for key, value := range values {
         mpt.Insert(key, value)
@@ -80,13 +95,16 @@ Note that you have to reconstruct an MPT from the JSON string, and use that MPT 
  */
 func DecodeFromJson(jsonString string) Block {
 
+    //Empty block
     newBlock := Block{}
+    //Empty BlockJson
     blockJson := BlockJson{}
     if err := json.Unmarshal([]byte(jsonString), &blockJson); err != nil {
         panic(err)
     }
-    mpt := createTrie(blockJson.MPT)
-    newBlock.Initial(blockJson.Height, blockJson.ParentHash, mpt)
+    mpt := NewTrie(blockJson.MPT)
+    fmt.Println("Height", blockJson.Height)
+    newBlock.NewBlock(blockJson.Height + 1, blockJson.ParentHash, mpt)
     return newBlock
 }
 
@@ -98,6 +116,13 @@ There's an example with details on Piazza.
  */
 func (b *Block) EncodeToJson() string {
 
+    result, err := json.Marshal(b.header)
+    if err != nil {
+        fmt.Println(err)
+        return ""
+    }
+    fmt.Println("Result", string(result))
+    //convert the mpt values into an entry to the json and add it into the result 
     return ""
 }
 

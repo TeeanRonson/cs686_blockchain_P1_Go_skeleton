@@ -1,4 +1,4 @@
-package MerklePatriciaTrie
+package p1
 
 import (
 	"encoding/hex"
@@ -21,12 +21,18 @@ type Node struct {
 
 type MerklePatriciaTrie struct {
 	db map[string]Node
+	inputs map[string]string
 	root string
 }
 
 func (mpt *MerklePatriciaTrie) GetRoot() string {
 	return mpt.root
 }
+
+func (mpt *MerklePatriciaTrie) GetInputs() map[string]string {
+	return mpt.inputs
+}
+
 
 func (mpt *MerklePatriciaTrie) GetHelper2(node string, path []uint8, position int) string {
 
@@ -184,6 +190,9 @@ func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 		return
 	}
 	fmt.Println("\nNewInsertion")
+	//Insert into extra database
+	mpt.inputs[key] = new_value
+
 	encodedKey := EncodeToHex(key)
 	fmt.Println("Insert Path:", encodedKey, new_value)
 	newHash := mpt.insertHelp("", mpt.root, encodedKey, new_value)

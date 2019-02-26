@@ -1,4 +1,4 @@
-package MerklePatriciaTrie
+package p1
 
 import ("fmt"
 )

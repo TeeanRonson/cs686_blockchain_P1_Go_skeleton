@@ -1,4 +1,4 @@
-package MerklePatriciaTrie
+package p1
 
 /**
 Retrieves a new MPT
@@ -6,9 +6,10 @@ Retrieves a new MPT
 func GetMPTrie() MerklePatriciaTrie {
 
     db := make(map[string]Node)
+    inputs := make(map[string]string)
     root := "root"
 
-    mpt := MerklePatriciaTrie{db, root}
+    mpt := MerklePatriciaTrie{db, inputs, root}
     return mpt
 }
 
