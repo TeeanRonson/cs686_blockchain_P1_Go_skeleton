@@ -2,13 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4badd353-da57-4286-b8d7-16b276dd4d74" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/p1/MerklePatriciaTrie_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1/DeleteHelpers.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/DeleteHelpers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1/InsertHelpers.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/InsertHelpers.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/p1/testingMPT.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/testingMPT.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1/Blockchain/Block.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/Blockchain/Block.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -19,37 +14,19 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie.go">
+        <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie/MerklePatriciaTrie.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2807">
-              <caret line="329" column="1" lean-forward="true" selection-start-line="329" selection-start-column="1" selection-end-line="329" selection-end-column="1" />
+            <state relative-caret-position="138">
+              <caret line="12" column="15" lean-forward="true" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/p1/InsertHelpers.go">
+        <entry file="file://$PROJECT_DIR$/p1/Blockchain/Block.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-582">
-              <caret line="175" column="5" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/p1/DeleteHelpers.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-560">
-              <caret line="31" column="4" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/p1/testingMPT.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="468">
-              <caret line="24" column="30" lean-forward="true" selection-start-line="18" selection-start-column="3" selection-end-line="24" selection-end-column="30" />
+            <state relative-caret-position="322">
+              <caret line="14" column="14" lean-forward="true" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="14" />
             </state>
           </provider>
         </entry>
@@ -57,8 +34,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="46">
-              <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+            <state relative-caret-position="1846">
+              <caret line="71" selection-start-line="71" selection-end-line="71" />
+              <folding>
+                <element signature="e#14#54#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -96,8 +76,10 @@
         <option value="$PROJECT_DIR$/p1/InsertHelpers.go" />
         <option value="$PROJECT_DIR$/p1/DeleteHelpers.go" />
         <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" />
-        <option value="$PROJECT_DIR$/p1/testingMPT.go" />
         <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie_test.go" />
+        <option value="$PROJECT_DIR$/p1/testingMPT.go" />
+        <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie/MerklePatriciaTrie.go" />
+        <option value="$PROJECT_DIR$/p1/Blockchain/Block.go" />
         <option value="$PROJECT_DIR$/main.go" />
       </list>
     </option>
@@ -122,11 +104,6 @@
               <item name="cs686_blockchain_P1_Go_skeleton" type="b2602c69:ProjectViewProjectNode" />
               <item name="cs686_blockchain_P1_Go_skeleton" type="462c0819:PsiDirectoryNode" />
               <item name="p1" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="cs686_blockchain_P1_Go_skeleton" type="b2602c69:ProjectViewProjectNode" />
-              <item name="cs686_blockchain_P1_Go_skeleton" type="462c0819:PsiDirectoryNode" />
-              <item name="Tests" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="cs686_blockchain_P1_Go_skeleton" type="b2602c69:ProjectViewProjectNode" />
@@ -157,6 +134,11 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="MTConfigurable" />
   </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/p1/MerklePatriciaTrie" />
+    </key>
+  </component>
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -169,7 +151,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Test.MerklePatriciaTrie_test.go">
+  <component name="RunManager" selected="Go Build.go build main.go">
     <configuration name="MPT main" type="GoApplicationRunConfiguration" factoryName="Go Application">
       <module name="cs686_blockchain_P1_Go_skeleton" />
       <working_directory value="$PROJECT_DIR$/" />
@@ -209,8 +191,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.MerklePatriciaTrie_test.go" />
         <item itemvalue="Go Build.go build main.go" />
+        <item itemvalue="Go Test.MerklePatriciaTrie_test.go" />
       </list>
     </recent_temporary>
   </component>
@@ -234,7 +216,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.18483904" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.26375908" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.337487" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -254,52 +236,62 @@
     <option name="version" value="1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Tests/mpt_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1120">
-          <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/p1/InsertHelpers.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-582">
-          <caret line="175" column="5" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2807">
-          <caret line="329" column="1" lean-forward="true" selection-start-line="329" selection-start-column="1" selection-end-line="329" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/p1/DeleteHelpers.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-560">
-          <caret line="31" column="4" selection-start-line="31" selection-start-column="4" selection-end-line="31" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie_test.go">
+    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie/MerklePatriciaTrie_test.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="754">
           <caret line="29" column="42" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/p1/testingMPT.go">
+    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie/testingMPT.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="468">
-          <caret line="24" column="30" lean-forward="true" selection-start-line="18" selection-start-column="3" selection-end-line="24" selection-end-column="30" />
+        <state relative-caret-position="840">
+          <caret line="31" column="38" selection-start-line="31" selection-start-column="38" selection-end-line="31" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie/DeleteHelpers.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="62" column="23" selection-start-line="62" selection-start-column="23" selection-end-line="62" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie/InsertHelpers.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-582">
+          <caret line="175" column="5" selection-start-line="175" selection-start-column="5" selection-end-line="175" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Tests/mpt_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-8084">
+          <caret line="53" column="5" selection-start-line="53" selection-start-column="5" selection-end-line="53" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie/MerklePatriciaTrie.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="138">
+          <caret line="12" column="15" lean-forward="true" selection-start-line="12" selection-start-column="15" selection-end-line="12" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p1/Blockchain/Block.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="322">
+          <caret line="14" column="14" lean-forward="true" selection-start-line="14" selection-start-column="14" selection-end-line="14" selection-end-column="14" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="13" selection-start-line="2" selection-start-column="13" selection-end-line="2" selection-end-column="13" />
+        <state relative-caret-position="1846">
+          <caret line="71" selection-start-line="71" selection-end-line="71" />
+          <folding>
+            <element signature="e#14#54#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

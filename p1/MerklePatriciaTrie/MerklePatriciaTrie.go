@@ -24,6 +24,10 @@ type MerklePatriciaTrie struct {
 	root string
 }
 
+func (mpt *MerklePatriciaTrie) GetRoot() string {
+	return mpt.root
+}
+
 func (mpt *MerklePatriciaTrie) GetHelper2(node string, path []uint8, position int) string {
 
 	currNode := mpt.db[node]
