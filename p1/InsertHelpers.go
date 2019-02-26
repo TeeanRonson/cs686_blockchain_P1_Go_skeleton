@@ -7,7 +7,7 @@ func GetMPTrie() MerklePatriciaTrie {
 
     db := make(map[string]Node)
     inputs := make(map[string]string)
-    root := "root"
+    root := "RootValue"
 
     mpt := MerklePatriciaTrie{db, inputs, root}
     return mpt

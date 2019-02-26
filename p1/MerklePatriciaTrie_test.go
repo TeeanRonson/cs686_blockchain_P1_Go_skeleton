@@ -1,6 +1,9 @@
 package p1
 
-import "testing"
+import (
+    "fmt"
+    "testing"
+)
 
 func TestMerklePatriciaTrie_Get1(t *testing.T) {
 
@@ -29,6 +32,31 @@ func TestMerklePatriciaTrie_Get1(t *testing.T) {
         t.Errorf("Result is %s", king)
         t.Errorf("Result is %s", alphabet)
     }
+}
 
+func TestMerklePatriciaTrie_Delete(t *testing.T) {
+
+    mpt := GetMPTrie()
+    fmt.Println("Inserting values")
+    mpt.Insert("aaa", "apple")
+    mpt.Insert("aap", "banana")
+    mpt.Insert("bb", "right leaf")
+    mpt.Insert("aa", "new")
+
+    fmt.Println("\nDeleting values")
+    deleteNew, err1 := mpt.Delete("aa")
+    fmt.Println(deleteNew, err1)
+
+    banana := mpt.Get("aap")
+    fmt.Println("Banana:", banana)
+
+    getApple := mpt.Get("aaa")
+    fmt.Println("Apple:", getApple)
+
+    if deleteNew != "Successful Deletion" || banana != "banana" || getApple != "apple" {
+        t.Errorf("deleteNew %s", deleteNew)
+        t.Errorf("banana %s", banana)
+        t.Errorf("apple %s", getApple)
+    }
 
 }

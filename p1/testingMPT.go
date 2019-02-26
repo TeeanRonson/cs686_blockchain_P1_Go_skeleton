@@ -61,7 +61,7 @@ func TestExt1() {
     newWord := mpt.Get("b")
     fmt.Println("Get:", newWord)
 
-    //fmt.Println(mpt.db[mpt.root])
+    //fmt.Println(mpt.db[mpt.Root])
     //fmt.Println(mpt.db["HashStart_42a990655bffe188c9823a2f914641a32dcbb1b28e8586bd29af291db7dcd4e8_HashEnd"])
     //fmt.Println(mpt.db["HashStart_2fdf6310583baee09f440c41749fd03f2542d1bcb9cf24b78045caf56d77758c_HashEnd"])
     //fmt.Println(mpt.db["HashStart_23ca1c3a6072294f27e66941c8cd3531b5d5ed16d7bf05883b7e30fbf32cb59b_HashEnd"])
@@ -110,7 +110,6 @@ func TestExt3() {
 
     getApple := mpt.Get("aaa")
     fmt.Println("Apple:", getApple)
-
 
 }
 

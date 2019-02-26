@@ -20,17 +20,9 @@ type Node struct {
 }
 
 type MerklePatriciaTrie struct {
-	db map[string]Node
-	inputs map[string]string
-	root string
-}
-
-func (mpt *MerklePatriciaTrie) GetRoot() string {
-	return mpt.root
-}
-
-func (mpt *MerklePatriciaTrie) GetInputs() map[string]string {
-	return mpt.inputs
+	db     map[string]Node
+	Inputs map[string]string
+	Root   string
 }
 
 
@@ -68,11 +60,11 @@ Traverses the MPT to find the value associated with the key
  */
 func (mpt *MerklePatriciaTrie) GetHelper1(path []uint8) string {
 
-	if path == nil || mpt.root == "" {
+	if path == nil || mpt.Root == "" {
 		fmt.Println("Nothing")
 		return ""
 	}
-	value := mpt.GetHelper2(mpt.root, path, 0)
+	value := mpt.GetHelper2(mpt.Root, path, 0)
 	return value
 }
 
@@ -191,13 +183,13 @@ func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 	}
 	fmt.Println("\nNewInsertion")
 	//Insert into extra database
-	mpt.inputs[key] = new_value
+	mpt.Inputs[key] = new_value
 
 	encodedKey := EncodeToHex(key)
 	fmt.Println("Insert Path:", encodedKey, new_value)
-	newHash := mpt.insertHelp("", mpt.root, encodedKey, new_value)
-	if newHash != mpt.root {
-		mpt.root = newHash
+	newHash := mpt.insertHelp("", mpt.Root, encodedKey, new_value)
+	if newHash != mpt.Root {
+		mpt.Root = newHash
 		fmt.Println("Newhash:", newHash)
 		fmt.Println("DB final:", mpt.db)
 	}
@@ -324,7 +316,7 @@ func (mpt *MerklePatriciaTrie) Delete(key string) (string, error) {
 	}
 	encodedKey := EncodeToHex(key)
 	fmt.Println("Delete Path:", encodedKey)
-	newHash, child, err := mpt.deleteHelper("", mpt.root, encodedKey)
+	newHash, child, err := mpt.deleteHelper("", mpt.Root, encodedKey)
 
 	fmt.Println("Child:", child)
 	if err != nil {
@@ -333,11 +325,11 @@ func (mpt *MerklePatriciaTrie) Delete(key string) (string, error) {
 	if newHash == "" {
 		return "", errors.New("Tree is Empty")
 	}
-	if newHash != mpt.root {
-		mpt.root = newHash
+	if newHash != mpt.Root {
+		mpt.Root = newHash
 		fmt.Println("Newhash:", newHash)
 		fmt.Println("DB final:", mpt.db)
-		return "Successful deletion", errors.New("")
+		return "Successful Deletion", errors.New("")
 	}
 	return "", errors.New("Path Not found")
 }

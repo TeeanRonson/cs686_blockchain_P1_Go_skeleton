@@ -13,8 +13,8 @@ import (
 )
 
 type Block struct {
-    header Header
-    mpt p1.MerklePatriciaTrie
+    Header Header
+    Mpt p1.MerklePatriciaTrie
 }
 
 type Header struct {
@@ -56,6 +56,7 @@ func getBytes(value p1.MerklePatriciaTrie) []byte {
         fmt.Println("error")
         log.Fatal("encode error:", err)
     }
+    fmt.Println("Stopped")
 
     // HERE ARE YOUR BYTES!!!!
     return network.Bytes()
@@ -67,8 +68,8 @@ This is a method of the block struct.
 func (b *Block) NewBlock(height int32, parentHash string, value p1.MerklePatriciaTrie) {
 
     var header Header
-    //mptAsBytes := getBytes(value)
-    mptAsBytes := value.GetRoot()
+    mptAsBytes := getBytes(value)
+    //mptAsBytes := value.GetRoot()
     fmt.Println("bytes length", len(mptAsBytes))
 
     header.Height = height
@@ -76,42 +77,68 @@ func (b *Block) NewBlock(height int32, parentHash string, value p1.MerklePatrici
     header.ParentHash = parentHash
     header.Size = int32(len(mptAsBytes))
 
-    hashString := string(header.Height) + string(header.Timestamp) + header.ParentHash + value.GetRoot() + string(header.Size)
+    hashString := string(header.Height) + string(header.Timestamp) + header.ParentHash + value.Root + string(header.Size)
     sum := sha3.Sum256([]byte(hashString))
     header.Hash = hex.EncodeToString(sum[:])
 
-    b.header = header
-    b.mpt = value
+    b.Header = header
+    b.Mpt = value
+}
+
+func (b *Block) CreateGenesisBlock() {
+
+    header := Header{0, int64(time.Now().Unix()), "GenesisBlock", "", 0}
+    b.Mpt = p1.GetMPTrie()
+    b.Header = header
 }
 
 /**
 Reconstruct MPT from Map input
  */
 func NewTrie(values map[string]string) p1.MerklePatriciaTrie {
-    //db := make(map[string]p1.Node)
-    //root := "root"
-    mpt := p1.GetMPTrie()
 
+    mpt := p1.GetMPTrie()
     for key, value := range values {
         mpt.Insert(key, value)
     }
     return mpt
 }
 
-/**
-This function takes a string that represents the JSON value of a block as an input, and decodes the input string back to a block instance.
-Note that you have to reconstruct an MPT from the JSON string, and use that MPT as the block's value.
- */
-func DecodeFromJson(jsonString string) Block {
+func convertToBlockJson(jsonString string) BlockJson {
 
-    //Empty block
-    var header Header
-    newBlock := Block{}
-    //Empty BlockJson
     blockJson := BlockJson{}
     if err := json.Unmarshal([]byte(jsonString), &blockJson); err != nil {
         panic(err)
     }
+    return blockJson
+}
+
+/**
+This function takes a string that represents the JSON value of a block as an input, and decodes the input string back to a block instance.
+Note that you have to reconstruct an MPT from the JSON string, and use that MPT as the block's value.
+ */
+func decodeFromJson(jsonString string) Block {
+
+   var header Header
+   newBlock := Block{}
+   blockJson := convertToBlockJson(jsonString)
+
+   mpt := NewTrie(blockJson.MPT)
+   header.Height = blockJson.Height
+   header.Timestamp = blockJson.Timestamp
+   header.Hash = blockJson.Hash
+   header.ParentHash = blockJson.ParentHash
+   header.Size = blockJson.Size
+
+   newBlock.Header = header
+   newBlock.Mpt = mpt
+   return newBlock
+}
+
+func decodeFromJson2(blockJson BlockJson) Block {
+
+    var header Header
+    newBlock := Block{}
     mpt := NewTrie(blockJson.MPT)
     header.Height = blockJson.Height
     header.Timestamp = blockJson.Timestamp
@@ -119,8 +146,8 @@ func DecodeFromJson(jsonString string) Block {
     header.ParentHash = blockJson.ParentHash
     header.Size = blockJson.Size
 
-    newBlock.header = header
-    newBlock.mpt = mpt
+    newBlock.Header = header
+    newBlock.Mpt = mpt
     return newBlock
 }
 
@@ -131,13 +158,14 @@ pairs that have been inserted into the MPT in your JSON string.
 There's an example with details on Piazza.
  */
 func (b *Block) EncodeToJson() string {
+
     toJson := BlockJson{
-        b.header.Height,
-        b.header.Timestamp,
-        b.header.Hash,
-        b.header.ParentHash,
-        b.header.Size,
-        b.mpt.GetInputs(),
+        b.Header.Height,
+        b.Header.Timestamp,
+        b.Header.Hash,
+        b.Header.ParentHash,
+        b.Header.Size,
+        b.Mpt.Inputs,
     }
 
     jsonFormatted, err := json.Marshal(toJson)
