@@ -18,11 +18,11 @@ type Block struct {
 }
 
 type Header struct {
-    Height int32
-    Timestamp int64
-    Hash string
-    ParentHash string
-    Size int32
+    Height int32                `json:"height"`
+    Timestamp int64             `json:"timeStamp"`
+    Hash string                 `json:"hash"`
+    ParentHash string           `json:"parentHash"`
+    Size int32                  `json:"size"`
 }
 
 type BlockJson struct {
@@ -34,6 +34,16 @@ type BlockJson struct {
     MPT        map[string]string `json:"mpt"`
 }
 
+func (b *Block) toString() string {
+
+    out, err := json.Marshal(b)
+    if err != nil {
+        panic(err)
+    }
+
+    fmt.Println("Inside", out)
+    return string(out)
+}
 
 func getBytes(value p1.MerklePatriciaTrie) []byte {
 
@@ -78,7 +88,6 @@ func (b *Block) NewBlock(height int32, parentHash string, value p1.MerklePatrici
 Reconstruct MPT from Map input
  */
 func NewTrie(values map[string]string) p1.MerklePatriciaTrie {
-    //
     //db := make(map[string]p1.Node)
     //root := "root"
     mpt := p1.GetMPTrie()
@@ -96,6 +105,7 @@ Note that you have to reconstruct an MPT from the JSON string, and use that MPT 
 func DecodeFromJson(jsonString string) Block {
 
     //Empty block
+    var header Header
     newBlock := Block{}
     //Empty BlockJson
     blockJson := BlockJson{}
@@ -103,8 +113,14 @@ func DecodeFromJson(jsonString string) Block {
         panic(err)
     }
     mpt := NewTrie(blockJson.MPT)
-    fmt.Println("Height", blockJson.Height)
-    newBlock.NewBlock(blockJson.Height + 1, blockJson.ParentHash, mpt)
+    header.Height = blockJson.Height
+    header.Timestamp = blockJson.Timestamp
+    header.Hash = blockJson.Hash
+    header.ParentHash = blockJson.ParentHash
+    header.Size = blockJson.Size
+
+    newBlock.header = header
+    newBlock.mpt = mpt
     return newBlock
 }
 
@@ -115,15 +131,20 @@ pairs that have been inserted into the MPT in your JSON string.
 There's an example with details on Piazza.
  */
 func (b *Block) EncodeToJson() string {
-
-    result, err := json.Marshal(b.header)
-    if err != nil {
-        fmt.Println(err)
-        return ""
+    toJson := BlockJson{
+        b.header.Height,
+        b.header.Timestamp,
+        b.header.Hash,
+        b.header.ParentHash,
+        b.header.Size,
+        b.mpt.GetInputs(),
     }
-    fmt.Println("Result", string(result))
-    //convert the mpt values into an entry to the json and add it into the result 
-    return ""
+
+    jsonFormatted, err := json.Marshal(toJson)
+    if err != nil {
+        fmt.Println("Error in EncodeToJson")
+    }
+    return string(jsonFormatted)
 }
 
 
