@@ -2,9 +2,10 @@ package p2
 
 import (
     "encoding/json"
+    "fmt"
     "github.com/pkg/errors"
+    "log"
     "reflect"
-    "strings"
 )
 
 /**
@@ -17,7 +18,6 @@ type BlockChain struct {
 }
 
 func NewBlockChain() BlockChain {
-
     chain := make(map[int32][]Block)
     return BlockChain{0, chain}
 }
@@ -51,7 +51,7 @@ func (bc *BlockChain) Insert(block Block) {
             }
         }
         currChain = append(currChain, block)
-        //update the length?
+        //update the length
         if bc.Length < block.Header.Height {
             bc.Length = block.Header.Height
         }
@@ -65,30 +65,20 @@ and return the list of those JsonStrings
  */
 func (bc *BlockChain) BlockChainEncodeToJson() (string, error) {
 
-    //Final value to return
-    valueToReturn := ""
-    //Create a string array to store each new Json string
-    jsonList := make([]string, 0)
+    jsonList := make([]BlockJson, 0)
     for _, chain := range bc.Chain {
-        //Create the string JsonArray for the current chain
-        dummy := "["
         for _, block := range chain {
-            blockEncoded, err := block.EncodeToJson()
-            if err != nil {
-                return "", err
-            }
-            jsonList = append(jsonList, blockEncoded)
-       }
-       //add all items in the string array into the JsonArray and close it with "]
-       dummy += strings.Join(jsonList, ",") + "]"
-       //add all values to the final value to return
-       valueToReturn += dummy
+            jsonList = append(jsonList, blockToBlockJson(block))
+        }
     }
 
-    return valueToReturn, nil
+    result, err := json.MarshalIndent(jsonList, "", "")
+    if err != nil {
+        fmt.Println("Cannot Marshal Indent jsonList")
+        log.Fatal(err)
+    }
+    return string(result), nil
 }
-
-
 /**
 This function is called upon a blockchain instance.
 It takes a blockchain JSON string as input,
@@ -106,7 +96,7 @@ func BlockChainDecodeFromJson(jsonString string) (BlockChain, error) {
         return newBlockChain, errors.New("Blockchain DecodeFromJson error")
     }
     for _, item := range blockJsonList {
-        createBlock := DecodeFromJson2(item)
+        createBlock := blockJsonToBlock(item)
         newBlockChain.Chain[height] = append(newBlockChain.Chain[height], createBlock)
     }
     return newBlockChain, nil
