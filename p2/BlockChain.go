@@ -18,7 +18,10 @@ type BlockChain struct {
 }
 
 func NewBlockChain() BlockChain {
-    chain := make(map[int32][]Block)
+    chain := make(map[int32][]Block, 0)
+    //var genesis Block
+    //genesis.CreateGenesisBlock()
+    //chain[0] = []Block{genesis}
     return BlockChain{0, chain}
 }
 /**
@@ -44,6 +47,11 @@ func (bc *BlockChain) Insert(block Block) {
 
     currChain := bc.Get(block.Header.Height)
 
+    if currChain == nil {
+        fmt.Println("No blocks at that height")
+        return
+    }
+
     if currChain != nil {
         for _, currBlock := range currChain {
             if reflect.DeepEqual(block.Header.Hash, currBlock.Header.Hash) {
@@ -51,6 +59,8 @@ func (bc *BlockChain) Insert(block Block) {
             }
         }
         currChain = append(currChain, block)
+        fmt.Println("currChain", currChain)
+
         //update the length
         if bc.Length < block.Header.Height {
             bc.Length = block.Header.Height

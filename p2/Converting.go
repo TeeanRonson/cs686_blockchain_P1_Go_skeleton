@@ -70,8 +70,6 @@ func getBytes(value p1.MerklePatriciaTrie) []byte {
         fmt.Println("error")
         log.Fatal("encode error:", err)
     }
-    fmt.Println("Stopped")
-
     // HERE ARE YOUR BYTES!!!!
     return network.Bytes()
 }
