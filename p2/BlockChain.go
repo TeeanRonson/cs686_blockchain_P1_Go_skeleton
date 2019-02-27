@@ -2,7 +2,9 @@ package p2
 
 import (
     "encoding/json"
+    "github.com/pkg/errors"
     "reflect"
+    "strings"
 )
 
 /**
@@ -61,12 +63,29 @@ This function iterates over all the blocks,
 generate blocks' JsonString by the function you implemented previously,
 and return the list of those JsonStrings
  */
-func (bc *BlockChain) EncodeToJson() string {
+func (bc *BlockChain) BlockChainEncodeToJson() (string, error) {
 
-    //Iterate over all the blocks at which height?
-    //Or every single block?
-    //Do we return an array of strings? or just 1 string?
-    return ""
+    //Final value to return
+    valueToReturn := ""
+    //Create a string array to store each new Json string
+    jsonList := make([]string, 0)
+    for _, chain := range bc.Chain {
+        //Create the string JsonArray for the current chain
+        dummy := "["
+        for _, block := range chain {
+            blockEncoded, err := block.EncodeToJson()
+            if err != nil {
+                return "", err
+            }
+            jsonList = append(jsonList, blockEncoded)
+       }
+       //add all items in the string array into the JsonArray and close it with "]
+       dummy += strings.Join(jsonList, ",") + "]"
+       //add all values to the final value to return
+       valueToReturn += dummy
+    }
+
+    return valueToReturn, nil
 }
 
 
@@ -76,23 +95,19 @@ It takes a blockchain JSON string as input,
 decodes the JSON string back to a list of block JSON strings,
 decodes each block JSON string back to a block instance, and inserts every block into the blockchain.
  */
-func DecodeFromJson(jsonString string) BlockChain {
+func BlockChainDecodeFromJson(jsonString string) (BlockChain, error) {
 
-    //convert the given jsonString to a list of blockJson strings
-    //convert each blockJson string into a block instance
-    //insert all blocks into the blockchain
     newBlockChain := NewBlockChain()
-    myList := make([]BlockJson, 0)
-    if err := json.Unmarshal([]byte(jsonString), &myList); err != nil {
+    blockJsonList := make([]BlockJson, 0)
+    height := int32(len(blockJsonList))
+
+    if err := json.Unmarshal([]byte(jsonString), &blockJsonList); err != nil {
         panic(err)
+        return newBlockChain, errors.New("Blockchain DecodeFromJson error")
     }
-
-    //fmt.Println(myList)
-    height := int32(len(myList))
-
-    for _, item := range myList {
-        createBlock := decodeFromJson2(item)
+    for _, item := range blockJsonList {
+        createBlock := DecodeFromJson2(item)
         newBlockChain.Chain[height] = append(newBlockChain.Chain[height], createBlock)
     }
-    return newBlockChain
+    return newBlockChain, nil
 }

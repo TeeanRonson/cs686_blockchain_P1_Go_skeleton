@@ -197,7 +197,6 @@ func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 
 /**
 Delete helper method
-
 If we find the path, delete the value, make new adjustments and send up a new hashvalue with nil error
 If we dont find the path, then we send up the same hashvalue with an error value
  */
