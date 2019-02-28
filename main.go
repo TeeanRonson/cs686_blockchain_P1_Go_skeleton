@@ -8,8 +8,8 @@ import (
 func main() {
 
     var genesis p2.Block
-    var bc p2.BlockChain
     var block1 p2.Block
+    bc := p2.NewBlockChain()
 
     genesis.CreateGenesisBlock()
     bc.Insert(genesis)

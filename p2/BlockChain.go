@@ -49,10 +49,11 @@ func (bc *BlockChain) Insert(block Block) {
 
     if currChain == nil {
         fmt.Println("No blocks at that height")
-        return
-    }
-
-    if currChain != nil {
+        newChain := make([]Block, 0)
+        newChain = append(newChain, block)
+        //add a new chain at the height
+        bc.Chain[block.Header.Height] = newChain
+    } else {
         for _, currBlock := range currChain {
             if reflect.DeepEqual(block.Header.Hash, currBlock.Header.Hash) {
                 return
@@ -60,8 +61,6 @@ func (bc *BlockChain) Insert(block Block) {
         }
         currChain = append(currChain, block)
         fmt.Println("currChain", currChain)
-
-        //update the length
         if bc.Length < block.Header.Height {
             bc.Length = block.Header.Height
         }
