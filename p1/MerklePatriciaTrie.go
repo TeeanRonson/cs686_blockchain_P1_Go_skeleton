@@ -186,7 +186,7 @@ func (mpt *MerklePatriciaTrie) Insert(key string, new_value string) {
 	mpt.Inputs[key] = new_value
 
 	encodedKey := EncodeToHex(key)
-	fmt.Println("Insert Path:", encodedKey, new_value)
+	fmt.Println("Insert Path in MPT:", encodedKey, new_value)
 	newHash := mpt.insertHelp("", mpt.Root, encodedKey, new_value)
 	if newHash != mpt.Root {
 		mpt.Root = newHash

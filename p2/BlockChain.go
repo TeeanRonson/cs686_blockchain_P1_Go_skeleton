@@ -46,25 +46,37 @@ ignore it because we don't store duplicate blocks; if not, insert the block into
 func (bc *BlockChain) Insert(block Block) {
 
     currChain := bc.Get(block.Header.Height)
+    fmt.Println("\nRound-----")
+    fmt.Println(len(bc.Get(0)))
+    fmt.Println(len(bc.Get(1)))
+    fmt.Println(len(bc.Get(2)))
+    fmt.Println(len(bc.Get(3)))
 
     if currChain == nil {
-        fmt.Println("No blocks at that height")
+        fmt.Println("No []Block at that height: append to Block height:", block.Header.Height)
         newChain := make([]Block, 0)
         newChain = append(newChain, block)
         //add a new chain at the height
         bc.Chain[block.Header.Height] = newChain
     } else {
+        fmt.Println("\nWe should see this twice------")
+        fmt.Println("Before length", len(currChain))
         for _, currBlock := range currChain {
             if reflect.DeepEqual(block.Header.Hash, currBlock.Header.Hash) {
+                fmt.Println("MATCH")
                 return
             }
         }
-        currChain = append(currChain, block)
-        fmt.Println("currChain", currChain)
-        if bc.Length < block.Header.Height {
-            bc.Length = block.Header.Height
-        }
+        //currChain = append(currChain, block)
+        //fmt.Println("After length", len(currChain))
+        //bc.Chain[block.Header.Height] = currChain
+        bc.Chain[block.Header.Height] = append(bc.Chain[block.Header.Height], block)
     }
+    if bc.Length < block.Header.Height {
+        bc.Length = block.Header.Height
+    }
+    fmt.Println("Top Length", bc.Length)
+    fmt.Println("End Round------")
 }
 
 /**
@@ -98,15 +110,19 @@ func BlockChainDecodeFromJson(jsonString string) (BlockChain, error) {
 
     newBlockChain := NewBlockChain()
     blockJsonList := make([]BlockJson, 0)
-    height := int32(len(blockJsonList))
 
     if err := json.Unmarshal([]byte(jsonString), &blockJsonList); err != nil {
         panic(err)
         return newBlockChain, errors.New("Blockchain DecodeFromJson error")
     }
+
     for _, item := range blockJsonList {
         createBlock := blockJsonToBlock(item)
-        newBlockChain.Chain[height] = append(newBlockChain.Chain[height], createBlock)
+        newBlockChain.Insert(createBlock)
     }
+    fmt.Println(len(newBlockChain.Get(0)))
+    fmt.Println(len(newBlockChain.Get(1)))
+    fmt.Println(len(newBlockChain.Get(2)))
+    fmt.Println(len(newBlockChain.Get(3)))
     return newBlockChain, nil
 }

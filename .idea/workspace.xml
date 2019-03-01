@@ -2,6 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4badd353-da57-4286-b8d7-16b276dd4d74" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" beforeDir="false" afterPath="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/p2/BlockChain.go" beforeDir="false" afterPath="$PROJECT_DIR$/p2/BlockChain.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/p2/BlockChain_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/p2/BlockChain_test.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -12,20 +16,62 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/main.go">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/p2/BlockChain.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="506">
-              <caret line="25" selection-start-line="25" selection-end-line="25" />
+            <state relative-caret-position="683">
+              <caret line="72" column="84" selection-start-line="72" selection-start-column="84" selection-end-line="72" selection-end-column="84" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-177">
+              <caret line="193" column="42" lean-forward="true" selection-start-line="193" selection-start-column="42" selection-end-line="193" selection-end-column="42" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/p2/BlockChain_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="345">
-              <caret line="20" column="18" lean-forward="true" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
+            <state relative-caret-position="1109">
+              <caret line="82" column="4" lean-forward="true" selection-start-line="82" selection-start-column="4" selection-end-line="82" selection-end-column="4" />
+              <folding>
+                <element signature="e#12#80#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/p2/Block.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="258">
+              <caret line="74" selection-start-line="74" selection-end-line="74" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/p2/Converting.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="217">
+              <caret line="52" selection-start-line="52" selection-end-line="52" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/main.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="632">
+              <caret line="39" column="31" lean-forward="true" selection-start-line="36" selection-start-column="4" selection-end-line="39" selection-end-column="31" />
+              <folding>
+                <element signature="e#14#108#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -62,13 +108,14 @@
         <option value="$PROJECT_DIR$/p1/HelperFunctions.go" />
         <option value="$PROJECT_DIR$/p1/InsertHelpers.go" />
         <option value="$PROJECT_DIR$/p1/DeleteHelpers.go" />
-        <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" />
         <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie_test.go" />
         <option value="$PROJECT_DIR$/p1/testingMPT.go" />
         <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie/MerklePatriciaTrie.go" />
         <option value="$PROJECT_DIR$/p1/Blockchain/Block.go" />
         <option value="$PROJECT_DIR$/main.go" />
+        <option value="$PROJECT_DIR$/p1/MerklePatriciaTrie.go" />
         <option value="$PROJECT_DIR$/p2/BlockChain_test.go" />
+        <option value="$PROJECT_DIR$/p2/BlockChain.go" />
       </list>
     </option>
   </component>
@@ -81,7 +128,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -112,6 +158,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -201,26 +248,47 @@
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="MerklePatriciaTrie_test_go - 2019.02.24 at 12h 58m 54s.xml">
-      <configuration name="MerklePatriciaTrie_test.go" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 17m 40s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="MerklePatriciaTrie_test_go - 2019.02.24 at 12h 59m 27s.xml">
-      <configuration name="MerklePatriciaTrie_test.go" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 19m 32s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="MerklePatriciaTrie_test_go - 2019.02.24 at 13h 06m 01s.xml">
-      <configuration name="MerklePatriciaTrie_test.go" configurationId="GoTestRunConfiguration" />
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 20m 05s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 21m 55s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 24m 34s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 25m 02s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 26m 19s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 43m 49s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 43m 57s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="BlockChain_test_go - 2019.03.01 at 13h 48m 24s.xml">
+      <configuration name="BlockChain_test.go" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15831296" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1601467" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.39356178" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.35929388" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.337487" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -247,17 +315,51 @@
     <entry file="file://$PROJECT_DIR$/Tests/mpt_test.go" />
     <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie/MerklePatriciaTrie.go" />
     <entry file="file://$PROJECT_DIR$/p1/Blockchain/Block.go" />
+    <entry file="file://$PROJECT_DIR$/p2/Block.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="258">
+          <caret line="74" selection-start-line="74" selection-end-line="74" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="506">
-          <caret line="25" selection-start-line="25" selection-end-line="25" />
+        <state relative-caret-position="632">
+          <caret line="39" column="31" lean-forward="true" selection-start-line="36" selection-start-column="4" selection-end-line="39" selection-end-column="31" />
+          <folding>
+            <element signature="e#14#108#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p2/Converting.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="217">
+          <caret line="52" selection-start-line="52" selection-end-line="52" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/p2/BlockChain_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="345">
-          <caret line="20" column="18" lean-forward="true" selection-start-line="20" selection-start-column="18" selection-end-line="20" selection-end-column="18" />
+        <state relative-caret-position="1109">
+          <caret line="82" column="4" lean-forward="true" selection-start-line="82" selection-start-column="4" selection-end-line="82" selection-end-column="4" />
+          <folding>
+            <element signature="e#12#80#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p1/MerklePatriciaTrie.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-177">
+          <caret line="193" column="42" lean-forward="true" selection-start-line="193" selection-start-column="42" selection-end-line="193" selection-end-column="42" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p2/BlockChain.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="683">
+          <caret line="72" column="84" selection-start-line="72" selection-start-column="84" selection-end-line="72" selection-end-column="84" />
         </state>
       </provider>
     </entry>
