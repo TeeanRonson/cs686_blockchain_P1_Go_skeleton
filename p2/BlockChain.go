@@ -9,7 +9,7 @@ import (
 )
 
 /**
-Chain = map which maps a block height to a list of blocks. The value is a list so that it can handle the forks.
+Chain = map: key = block height; value = array of Block objects.
 Length = Length equals to the highest block height.
  */
 type BlockChain struct {
@@ -18,10 +18,10 @@ type BlockChain struct {
 }
 
 func NewBlockChain() BlockChain {
-    chain := make(map[int32][]Block, 0)
     //var genesis Block
     //genesis.CreateGenesisBlock()
     //chain[0] = []Block{genesis}
+    chain := make(map[int32][]Block, 0)
     return BlockChain{0, chain}
 }
 /**
@@ -39,44 +39,32 @@ func (bc *BlockChain) Get(height int32) []Block {
 
 /**
 This function takes a block as the argument,
-use its height to find the corresponding list in blockchain's Chain map.
+uses its height to find the corresponding list in the Blockchain's Chain map.
 If the list already contains that block's hash,
-ignore it because we don't store duplicate blocks; if not, insert the block into the list.
+we ignore it because we don't store duplicate blocks; if not, insert the block into the list at that height
  */
 func (bc *BlockChain) Insert(block Block) {
 
     currChain := bc.Get(block.Header.Height)
     fmt.Println("\nRound-----")
-    fmt.Println(len(bc.Get(0)))
-    fmt.Println(len(bc.Get(1)))
-    fmt.Println(len(bc.Get(2)))
-    fmt.Println(len(bc.Get(3)))
 
     if currChain == nil {
-        fmt.Println("No []Block at that height: append to Block height:", block.Header.Height)
+        //fmt.Println("No []Block at that height: append to Block height:", block.Header.Height)
         newChain := make([]Block, 0)
         newChain = append(newChain, block)
         //add a new chain at the height
         bc.Chain[block.Header.Height] = newChain
     } else {
-        fmt.Println("\nWe should see this twice------")
-        fmt.Println("Before length", len(currChain))
         for _, currBlock := range currChain {
             if reflect.DeepEqual(block.Header.Hash, currBlock.Header.Hash) {
-                fmt.Println("MATCH")
                 return
             }
         }
-        //currChain = append(currChain, block)
-        //fmt.Println("After length", len(currChain))
-        //bc.Chain[block.Header.Height] = currChain
         bc.Chain[block.Header.Height] = append(bc.Chain[block.Header.Height], block)
+        if bc.Length < block.Header.Height {
+            bc.Length = block.Header.Height
+        }
     }
-    if bc.Length < block.Header.Height {
-        bc.Length = block.Header.Height
-    }
-    fmt.Println("Top Length", bc.Length)
-    fmt.Println("End Round------")
 }
 
 /**
@@ -120,9 +108,5 @@ func BlockChainDecodeFromJson(jsonString string) (BlockChain, error) {
         createBlock := blockJsonToBlock(item)
         newBlockChain.Insert(createBlock)
     }
-    fmt.Println(len(newBlockChain.Get(0)))
-    fmt.Println(len(newBlockChain.Get(1)))
-    fmt.Println(len(newBlockChain.Get(2)))
-    fmt.Println(len(newBlockChain.Get(3)))
     return newBlockChain, nil
 }

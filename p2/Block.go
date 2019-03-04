@@ -39,7 +39,6 @@ func (b *Block) NewBlock(height int32, parentHash string, value p1.MerklePatrici
 
     var header Header
     mptAsBytes := getBytes(value)
-    fmt.Println("bytes length:", len(mptAsBytes))
 
     header.Height = height
     header.Timestamp = int64(time.Now().Unix())
@@ -55,7 +54,7 @@ func (b *Block) NewBlock(height int32, parentHash string, value p1.MerklePatrici
 }
 
 /**
-Create Genesis block
+Method creates the Genesis block
  */
 func (b *Block) CreateGenesisBlock() {
 
@@ -65,7 +64,7 @@ func (b *Block) CreateGenesisBlock() {
 }
 
 /**
-Decode the JsonString into a Block
+Decode the JsonString into a Block struct object
 Note that you have to reconstruct an MPT from the JSON string, and use that MPT as the block's value.
  */
 func DecodeFromJson(jsonString string) (Block, error) {
@@ -90,7 +89,7 @@ func DecodeFromJson(jsonString string) (Block, error) {
 }
 
 /**
-Encode Block to Json string
+Encode Block struct into to Json string
  */
 func (b *Block) EncodeToJson() (string, error) {
 
